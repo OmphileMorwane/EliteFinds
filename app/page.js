@@ -51,6 +51,32 @@ export default async function ProductsPage({ searchParams }) {
             </div>
           </Link>
         ))}
-        </div>
-</div>
-  )}
+      </div>
+      <Pagination currentPage={page} />
+    </div>
+  );
+}
+
+function Pagination({ currentPage }) {
+  const pageNum = parseInt(currentPage, 10);
+  const prevPage = pageNum > 1 ? pageNum - 1 : null;
+  const nextPage = pageNum + 1;
+
+  return (
+    <div className="flex justify-between items-center mt-8">
+      {prevPage && (
+        <Link href={`/?page=${prevPage}`}>
+          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
+            Previous Page
+          </button>
+        </Link>
+      )}
+      <div className="text-gray-700">Page {currentPage}</div>
+      <Link href={`/?page=${nextPage}`}>
+        <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
+          Next Page
+        </button>
+      </Link>
+    </div>
+  );
+}
