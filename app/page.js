@@ -27,29 +27,32 @@ export default async function ProductsPage({ searchParams }) {
 
   return (
     <div className="max-w-6xl mx-auto p-8 bg-stone-100">
-      <h1 className="text-3xl font-bold mb-8">Products
-        
-      </h1>
+      <h1 className="text-3xl font-bold mb-8">Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product) => (
-          <Link key={product.id} href={`/${product.id}`}>
-            <div className="border border-gray-200 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <img
-                src={product.images[0]}
-                alt={product.title}
-                className="h-40 w-full object-contain"
-              />
-              <div className="p-4">
-                <h2 className="text-lg font-semibold text-gray-800 truncate">
-                  {product.title}
-                </h2>
-                <p className="text-green-600 font-bold mt-2">
-                  ${product.price}
-                </p>
-                <p className="text-gray-500 text-sm">{product.category}</p>
-              </div>
+          <div
+            key={product.id}
+            className="border border-stone-200 bg-stone-200 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
+          >
+            <img
+              src={product.images[0]}
+              alt={product.title}
+              className="h-40 w-full object-contain"
+            />
+            <div className="p-4">
+              <h2 className="text-lg font-semibold text-gray-800 truncate">
+                {product.title}
+              </h2>
+              <p className="text-green-600 font-bold mt-2">${product.price}</p>
+              <p className="text-gray-500 text-sm">{product.category}</p>
+              <Link
+                href={`/${product.id}`}
+                className="inline-block mt- px-1 py-1 bg-green-600 text-white rounded hover:bg-green-900"
+              >
+                View Details
+              </Link>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
       <Pagination currentPage={page} />
