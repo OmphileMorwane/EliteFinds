@@ -75,7 +75,7 @@ export default async function ProductPage({ params }) {
               product.reviews.map((review) => (
                 <div key={review.id} className="mb-4 border-b pb-4">
                   <p className="font-medium">
-                    {review.name} -{" "}
+                    {review.reviewerName} -{" "}
                     <span className="text-gray-500">{review.date}</span>
                   </p>
                   <p className="text-sm text-gray-600">{review.comment}</p>
