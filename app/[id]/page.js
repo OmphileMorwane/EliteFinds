@@ -1,5 +1,7 @@
-import { notFound } from "next/navigation";
+
 import BackButton from "../components/BackButton";
+import ImageCarousel from "../components/ImageCarousel";
+
 
 async function fetchProduct(id) {
   const res = await fetch(
@@ -31,19 +33,23 @@ export default async function ProductPage({ params }) {
     return notFound();
   }
 
+
   return (
-    
     <div className="max-w-5xl mx-auto p-8">
-      <div className="max-w-5xl mx-auto p-8">
       <BackButton />
       <h1 className="text-3xl font-bold mb-6">{product.title}</h1>
       <div className="flex flex-col md:flex-row">
-        <img
-          src={product.images[0]}
-          alt={product.title}
-          className="w-full md:w-1/2 h-96 object-contain rounded-lg shadow-lg"
-        />
-        
+        <div className="w-full md:w-1/2">
+          {product.images.length > 1 ? (
+            <ImageCarousel images={product.images} />
+          ) : (
+            <img
+              src={product.images[0]}
+              alt={product.title}
+              className="w-full h-96 object-contain rounded-lg shadow-lg"
+            />
+          )}
+        </div>
         <div className="mt-6 md:mt-0 md:ml-8 flex-1">
           <p className="text-lg text-gray-700 mb-4">{product.description}</p>
           <p className="text-xl font-semibold mb-2">
@@ -63,7 +69,6 @@ export default async function ProductPage({ params }) {
           >
             {product.stock > 0 ? "In stock" : "Out of stock"}
           </p>
-
           <div className="bg-gray-100 p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold mb-4">Reviews</h3>
             {product.reviews.length > 0 ? (
@@ -85,7 +90,7 @@ export default async function ProductPage({ params }) {
           </div>
         </div>
       </div>
-      </div>
     </div>
   );
 }
+
