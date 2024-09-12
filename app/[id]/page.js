@@ -1,8 +1,8 @@
 "use client";
-
+import { useParams } from "next/navigation";
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
-
+import { useState, useEffect } from "react";
 
 async function fetchProduct(id) {
   const res = await fetch(
@@ -16,24 +16,40 @@ async function fetchProduct(id) {
   return res.json();
 }
 
-export default async function ProductPage({ params }) {
-  const { id } = params;
-  let product;
+export default function ProductPage() {
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [error, setError] = useState(null); // Add error state
+  const { id } = useParams();
 
-  try {
-    product = await fetchProduct(id);
-  } catch (error) {
-    return (
-      <p className="text-red-500">
-        Failed to load product. Please try again later.
-      </p>
-    );
+  useEffect(() => {
+    async function getProductData(id) {
+      try {
+        const productIdData = await fetchProduct(id);
+        setProduct(productIdData);
+      } catch (error) {
+        setError("Failed to load product. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (id) {
+      getProductData(id);
+    }
+  }, [id]);
+
+  if (loading) {
+    return <p>Loading product...</p>; // Show loading state
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>; // Show error message if fetching fails
   }
 
   if (!product) {
-    return notFound();
+    return <p>Product not found.</p>; // Fallback if product is not found
   }
-
 
   return (
     <div className="max-w-5xl mx-auto p-8">
