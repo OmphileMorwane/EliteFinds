@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import BackButton from "../components/BackButton";
 
 async function fetchProduct(id) {
   const res = await fetch(
@@ -31,7 +32,10 @@ export default async function ProductPage({ params }) {
   }
 
   return (
+    
     <div className="max-w-5xl mx-auto p-8">
+      <div className="max-w-5xl mx-auto p-8">
+      <BackButton />
       <h1 className="text-3xl font-bold mb-6">{product.title}</h1>
       <div className="flex flex-col md:flex-row">
         <img
@@ -80,6 +84,7 @@ export default async function ProductPage({ params }) {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
