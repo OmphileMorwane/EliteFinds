@@ -52,18 +52,18 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-8">
+    <div className="max-w-5xl mx-auto p-8 py-20">
       <BackButton />
       <h1 className="text-3xl font-bold mb-6">{product.title}</h1>
       <div className="flex flex-col md:flex-row">
-        <div className="w-full md:w-1/2">
+        <div className="w-full md:w-1/2 " >
           {product.images.length > 1 ? (
             <ImageCarousel images={product.images} />
           ) : (
             <img
               src={product.images[0]}
               alt={product.title}
-              className="w-full h-96 object-contain rounded-lg shadow-lg"
+              className="w-full h-96 object-contain rounded-lg shadow-lg bg-stone-200"
             />
           )}
         </div>
@@ -86,7 +86,7 @@ export default function ProductPage() {
           >
             {product.stock > 0 ? "In stock" : "Out of stock"}
           </p>
-          <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+          <div className="bg-stone-200 p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold mb-4">Reviews</h3>
             {product.reviews.length > 0 ? (
               product.reviews.map((review) => (
