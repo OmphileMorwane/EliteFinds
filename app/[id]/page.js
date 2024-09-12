@@ -93,7 +93,16 @@ export default function ProductPage() {
                 <div key={review.id} className="mb-4 border-b pb-4">
                   <p className="font-medium">
                     {review.reviewerName} -{" "}
-                    <span className="text-gray-500">{review.date}</span>
+                    <span className="text-gray-500">
+                      {new Date(review.date).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })}
+                    </span>
                   </p>
                   <p className="text-sm text-gray-600">{review.comment}</p>
                   <p className="text-sm font-semibold">
