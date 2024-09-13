@@ -56,3 +56,7 @@ Navigate to https://ompmor-404-jse2407-group-5ce2485x6-omphilemorwanes-projects.
 
 
 ![Screenshot](/public/images/Screenshot1.png)
+
+![Screenshot](/public/images/Screenshot2.png)
+
+![Screenshot](/public/images/Screenshot3.png)
