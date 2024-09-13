@@ -8,15 +8,20 @@ import Link from "next/link";
 import "../globals.css";
 
 async function fetchProduct(id) {
-  const res = await fetch(
-    `https://next-ecommerce-api.vercel.app/products/${id}`
-  );
+  try {
+    const res = await fetch(
+      `https://next-ecommerce-api.vercel.app/products/${id}`
+    );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch product");
+    if (!res.ok) {
+      throw new Error("Failed to fetch product");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("Error fetching product:", error.message);
+    throw error; // Re-throw to handle in the component
   }
-
-  return res.json();
 }
 
 export default function ProductPage() {
@@ -39,6 +44,9 @@ export default function ProductPage() {
 
     if (id) {
       getProductData(id);
+    } else {
+      setError("Invalid product ID."); // Handle case where id is missing
+      setLoading(false);
     }
   }, [id]);
 
@@ -66,29 +74,37 @@ export default function ProductPage() {
       <BackButton />
       <h1 className="text-3xl font-bold mb-6">{product.title}</h1>
       <div className="flex flex-col md:flex-row">
-        <div className="w-full md:w-1/2 " >
-          {product.images.length > 1 ? (
+        <div className="w-full md:w-1/2">
+          {product.images && product.images.length > 1 ? (
             <ImageCarousel images={product.images} />
-          ) : (
+          ) : product.images && product.images.length === 1 ? (
             <img
               src={product.images[0]}
               alt={product.title}
               className="w-full h-96 object-contain rounded-lg shadow-lg bg-stone-200"
+              onError={(e) => {
+                e.target.onerror = null; 
+                e.target.src = "/fallback-image.jpg"; // Fallback image for broken image links
+              }}
             />
+          ) : (
+            <p>No images available for this product.</p>
           )}
         </div>
         <div className="mt-6 md:mt-0 md:ml-8 flex-1">
-          <p className="text-lg text-gray-700 mb-4">{product.description}</p>
+          <p className="text-lg text-gray-700 mb-4">{product.description || "No description available."}</p>
           <p className="text-xl font-semibold mb-2">
-            Price: <span className="text-green-600">${product.price}</span>
+            Price: <span className="text-green-600">${product.price || "N/A"}</span>
           </p>
           <p className="text-sm text-gray-500 mb-2">
-            Category: {product.category}
+            Category: {product.category || "Uncategorized"}
           </p>
           <p className="text-sm text-gray-500 mb-2">
-            Tags: {product.tags.join(", ")}
+            Tags: {product.tags ? product.tags.join(", ") : "No tags available."}
           </p>
-          <p className="text-sm text-gray-500 mb-4">Rating: {product.rating}</p>
+          <p className="text-sm text-gray-500 mb-4">
+            Rating: {product.rating || "No rating available."}
+          </p>
           <p
             className={`text-sm font-medium mb-6 ${
               product.stock > 0 ? "text-green-500" : "text-red-500"
@@ -98,25 +114,27 @@ export default function ProductPage() {
           </p>
           <div className="bg-stone-200 p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold mb-4">Reviews</h3>
-            {product.reviews.length > 0 ? (
+            {product.reviews && product.reviews.length > 0 ? (
               product.reviews.map((review) => (
                 <div key={review.id} className="mb-4 border-b pb-4">
                   <p className="font-medium">
-                    {review.reviewerName} -{" "}
+                    {review.reviewerName || "Anonymous"} -{" "}
                     <span className="text-gray-500">
-                      {new Date(review.date).toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                      })}
+                      {review.date
+                        ? new Date(review.date).toLocaleString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                            hour12: true,
+                          })
+                        : "Date unknown"}
                     </span>
                   </p>
-                  <p className="text-sm text-gray-600">{review.comment}</p>
+                  <p className="text-sm text-gray-600">{review.comment || "No comment provided."}</p>
                   <p className="text-sm font-semibold">
-                    Rating: ⭐ {review.rating}
+                    Rating: ⭐ {review.rating || "No rating"}
                   </p>
                 </div>
               ))
@@ -129,4 +147,3 @@ export default function ProductPage() {
     </div>
   );
 }
-
