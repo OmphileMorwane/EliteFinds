@@ -13,7 +13,9 @@ const Navbar = () => {
               className="h-full w-auto transform scale-150"
             />
           </div>
-          <h1 className="text-white text-2xl font-bold">ShopSmart</h1>
+          <h1 className="text-white text-2xl font-bold">EliteFinds
+            
+          </h1>
         </div>
         <div className="space-x-4">
           <Link href="/products" className="hover:text-gray-300">
