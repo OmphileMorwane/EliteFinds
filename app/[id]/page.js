@@ -3,7 +3,8 @@ import { useParams } from "next/navigation";
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
 import { useState, useEffect } from "react";
-import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Import the skeleton loader
+import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Import the skeleton 
+import Link from "next/link";
 
 async function fetchProduct(id) {
   const res = await fetch(
@@ -45,7 +46,14 @@ export default function ProductPage() {
   }
 
   if (error) {
-    return <p className="text-red-500">{error}</p>; // Show error message if fetching fails
+    return (
+      <div>
+        <p className="text-red-500">{error}</p> {/* Show error message */}
+        <Link href="/products">
+          <a className="text-blue-500 underline">Back to Products</a>
+        </Link>
+      </div>
+    );
   }
 
   if (!product) {
