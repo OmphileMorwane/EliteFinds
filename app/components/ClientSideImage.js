@@ -1,6 +1,6 @@
 'use client'; // Ensure this file is treated as a client component
 
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useState } from 'react';
 
 /**
