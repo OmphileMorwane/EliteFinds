@@ -40,7 +40,7 @@ npm (version 6.x or higher) or yarn (version 1.22.x or higher)
 Clone the Repository
 
 
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/OmphileMorwane/OMPMOR404_jse2407_Group-b_Omphile-Morwane_FSJ01.git
 Navigate into the Project Directory
 
 -Install Dependencies
