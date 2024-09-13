@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import SkeletonLoader from "./components/SkeletonLoader"; // Ensure this path is correct
+import SkeletonLoader from "./components/SkeletonLoader";
 import ProductsImageCorousel from "./components/ProductsImageCorousel";
 import "./globals.css";
 
@@ -9,27 +9,32 @@ export const dynamic = "force-dynamic"; // For always fetching fresh data
 
 async function fetchProducts(page = 1) {
   const skip = (page - 1) * 20;
-  const res = await fetch(
-    `https://next-ecommerce-api.vercel.app/products?skip=${skip}&limit=20`
-  );
+  
+  try {
+    const res = await fetch(
+      `https://next-ecommerce-api.vercel.app/products?skip=${skip}&limit=20`
+    );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch products");
+    if (!res.ok) {
+      throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    return {
+      products: data,
+      hasMore: data.length === 20, // If we get 20 products, assume there are more
+    };
+  } catch (err) {
+    // Handle network or parsing errors
+    throw new Error(`Error fetching products: ${err.message}`);
   }
-
-  const data = await res.json(); // Make sure to parse the JSON data
-
-  return {
-    products: data,
-    hasMore: data.length === 20, // If we get 20 products, assume there are more
-  };
 }
 
 export default function ProductsPage({ searchParams }) {
-  const [loading, setLoading] = useState(true); // State to track loading
+  const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
-  const [hasMore, setHasMore] = useState(true); // State to track if there are more products
+  const [hasMore, setHasMore] = useState(true);
 
   const page = searchParams.page || 1;
 
@@ -39,7 +44,7 @@ export default function ProductsPage({ searchParams }) {
         setLoading(true);
         const { products: fetchedProducts, hasMore: more } = await fetchProducts(page);
 
-        // If we're on a page beyond 10, or if there are no more products, stop fetching
+        // Stop fetching if there are no more products or if we exceed the page limit
         if (page > 10 || !more) {
           setHasMore(false);
         }
