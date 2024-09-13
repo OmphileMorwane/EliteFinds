@@ -52,3 +52,8 @@ npm run dev
 then click on the given link to Open Your Browser
 
 Navigate to https://ompmor-404-jse2407-group-5ce2485x6-omphilemorwanes-projects.vercel.appto view deployed the application.
+
+
+
+![Screenshot](./images/Screenshot 1.png
+)
