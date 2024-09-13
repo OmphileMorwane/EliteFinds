@@ -30,19 +30,19 @@ body {
 .slick-prev {
   color: grey; /* Change to your desired color */
   z-index: 1;
-  left: 10px; /* Adjust position if needed */
+  left: 30px; /* Adjust position if needed */
 }
 
 /* Style for the next arrow */
 .slick-next {
   color: grey; /* Change to your desired color */
   z-index: 1;
-  right: 10px; /* Adjust position if needed */
+  right: 30px; /* Adjust position if needed */
 }
 
 /* Optional: Adjust arrow size */
 .slick-prev:before, 
 .slick-next:before {
-  font-size: 25px; /* Adjust size */
+  font-size: 20px; /* Adjust size */
   color: grey; /* Change the arrow color */
 }
