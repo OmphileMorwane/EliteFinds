@@ -5,6 +5,7 @@ import ImageCarousel from "../components/ImageCarousel";
 import { useState, useEffect } from "react";
 import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Import the skeleton 
 import Link from "next/link";
+import "../globals.css";
 
 async function fetchProduct(id) {
   const res = await fetch(
