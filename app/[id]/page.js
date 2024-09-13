@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
 import { useState, useEffect } from "react";
+import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Import the skeleton loader
 
 async function fetchProduct(id) {
   const res = await fetch(
@@ -40,7 +41,7 @@ export default function ProductPage() {
   }, [id]);
 
   if (loading) {
-    return <p>Loading product...</p>; // Show loading state
+    return <ProductSkeletonLoader />; // Show loading state
   }
 
   if (error) {
