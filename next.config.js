@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-        images: {
-          domains: ['cdn.dummyjson.com'], // Add your external image domain here
-        },
-      };
-      
-      module.exports = nextConfig;
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https', // Assuming your image uses HTTPS
+        hostname: 'cdn.dummyjson.com',
+      },
+    ],
+  },
+};
+
+module.exports = nextConfig;
