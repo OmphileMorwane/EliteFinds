@@ -1,6 +1,5 @@
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
-import ProductSkeletonLoader from "../components/ProductSkeletonLoader";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
 
