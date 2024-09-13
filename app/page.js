@@ -17,26 +17,38 @@ async function fetchProducts(page = 1) {
     throw new Error("Failed to fetch products");
   }
 
-  return res.json();
+  const data = await res.json(); // Make sure to parse the JSON data
+
+  return {
+    products: data,
+    hasMore: data.length === 20, // If we get 20 products, assume there are more
+  };
 }
 
 export default function ProductsPage({ searchParams }) {
   const [loading, setLoading] = useState(true); // State to track loading
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true); // State to track if there are more products
 
   const page = searchParams.page || 1;
 
   useEffect(() => {
     async function loadProducts() {
       try {
-        setLoading(true); // Start loading
-        const fetchedProducts = await fetchProducts(page);
-        setProducts(fetchedProducts); // Set the products once fetched
+        setLoading(true);
+        const { products: fetchedProducts, hasMore: more } = await fetchProducts(page);
+
+        // If we're on a page beyond 10, or if there are no more products, stop fetching
+        if (page > 10 || !more) {
+          setHasMore(false);
+        }
+
+        setProducts(fetchedProducts);
       } catch (err) {
         setError("Failed to load products. Please try again later.");
       } finally {
-        setLoading(false); // End loading
+        setLoading(false);
       }
     }
 
@@ -86,12 +98,12 @@ export default function ProductsPage({ searchParams }) {
           </div>
         ))}
       </div>
-      <Pagination currentPage={page} />
+      <Pagination currentPage={page} hasMore={hasMore} />
     </div>
   );
 }
 
-function Pagination({ currentPage }) {
+function Pagination({ currentPage, hasMore }) {
   const pageNum = parseInt(currentPage, 10);
   const prevPage = pageNum > 1 ? pageNum - 1 : null;
   const nextPage = pageNum + 1;
@@ -105,12 +117,14 @@ function Pagination({ currentPage }) {
           </button>
         </Link>
       )}
-      <div className="text-gray-700">Page {currentPage}</div>
-      <Link href={`/?page=${nextPage}`}>
-        <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
-          Next Page
-        </button>
-      </Link>
+      <div className="text-gray-700">Page {currentPage} of 10</div>
+      {hasMore && (
+        <Link href={`/?page=${nextPage}`}>
+          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
+            Next Page
+          </button>
+        </Link>
+      )}
     </div>
   );
 }
