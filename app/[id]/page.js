@@ -1,7 +1,9 @@
+import "../globals.css";
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
+
 
 // Dynamically import ClientSideImage to ensure it runs on the client side
 const ClientSideImage = dynamic(() => import('../components/ClientSideImage'), {
