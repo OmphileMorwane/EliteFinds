@@ -1,4 +1,7 @@
+"use client"
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import  SkeletonLoader  from "./components/SkeletonLoader"; // Ensure this path is correct
 
 export const dynamic = "force-dynamic"; // For always fetching fresh data
 
@@ -15,14 +18,35 @@ async function fetchProducts(page = 1) {
   return res.json();
 }
 
-export default async function ProductsPage({ searchParams }) {
-  const page = searchParams.page || 1;
-  let products;
+export default function ProductsPage({ searchParams }) {
+  const [loading, setLoading] = useState(true); // State to track loading
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
 
-  try {
-    products = await fetchProducts(page);
-  } catch (error) {
-    return <p>Failed to load products. Please try again later.</p>;
+  const page = searchParams.page || 1;
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        setLoading(true); // Start loading
+        const fetchedProducts = await fetchProducts(page);
+        setProducts(fetchedProducts); // Set the products once fetched
+      } catch (err) {
+        setError("Failed to load products. Please try again later.");
+      } finally {
+        setLoading(false); // End loading
+      }
+    }
+
+    loadProducts();
+  }, [page]);
+
+  if (loading) {
+    return <SkeletonLoader />; // Display SkeletonLoader while loading
+  }
+
+  if (error) {
+    return <p>{error}</p>; // Handle error if fetching fails
   }
 
   return (
