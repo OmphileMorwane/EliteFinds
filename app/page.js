@@ -7,6 +7,13 @@ import "./globals.css";
 
 export const dynamic = "force-dynamic"; // For always fetching fresh data
 
+/**
+ * Fetches a list of products from an API.
+ * 
+ * @param {number} page - The page number for pagination (default is 1).
+ * @returns {Promise<{ products: Array, hasMore: boolean }>} - A promise that resolves to an object containing the products and a flag indicating if there are more products to load.
+ * @throws {Error} - Throws an error if the fetch operation fails.
+ */
 async function fetchProducts(page = 1) {
   const skip = (page - 1) * 20;
   
@@ -30,6 +37,13 @@ async function fetchProducts(page = 1) {
   }
 }
 
+/**
+ * ProductsPage component to display a list of products.
+ * 
+ * @param {Object} props - Component props.
+ * @param {Object} props.searchParams - The search parameters, including the page number for pagination.
+ * @returns {JSX.Element} - The rendered component.
+ */
 export default function ProductsPage({ searchParams }) {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -39,6 +53,9 @@ export default function ProductsPage({ searchParams }) {
   const page = searchParams.page || 1;
 
   useEffect(() => {
+    /**
+     * Load products from the API and update component state.
+     */
     async function loadProducts() {
       try {
         setLoading(true);
@@ -108,6 +125,14 @@ export default function ProductsPage({ searchParams }) {
   );
 }
 
+/**
+ * Pagination component for navigating between pages.
+ * 
+ * @param {Object} props - Component props.
+ * @param {number} props.currentPage - The current page number.
+ * @param {boolean} props.hasMore - Flag indicating if there are more pages to load.
+ * @returns {JSX.Element} - The rendered component.
+ */
 function Pagination({ currentPage, hasMore }) {
   const pageNum = parseInt(currentPage, 10);
   const prevPage = pageNum > 1 ? pageNum - 1 : null;

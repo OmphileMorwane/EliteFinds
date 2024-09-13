@@ -7,6 +7,13 @@ import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Impo
 import Link from "next/link";
 import "../globals.css";
 
+/**
+ * Fetches product details from an API based on the product ID.
+ * 
+ * @param {string} id - The ID of the product to fetch.
+ * @returns {Promise<Object>} - A promise that resolves to the product data.
+ * @throws {Error} - Throws an error if the fetch operation fails.
+ */
 async function fetchProduct(id) {
   try {
     const res = await fetch(
@@ -24,6 +31,11 @@ async function fetchProduct(id) {
   }
 }
 
+/**
+ * ProductPage component to display detailed information about a single product.
+ * 
+ * @returns {JSX.Element} - The rendered component.
+ */
 export default function ProductPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
@@ -31,6 +43,11 @@ export default function ProductPage() {
   const { id } = useParams();
 
   useEffect(() => {
+    /**
+     * Fetch and set product data based on the product ID.
+     * 
+     * @param {string} id - The ID of the product to fetch.
+     */
     async function getProductData(id) {
       try {
         const productIdData = await fetchProduct(id);
