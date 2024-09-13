@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import  SkeletonLoader  from "./components/SkeletonLoader"; // Ensure this path is correct
+import SkeletonLoader from "./components/SkeletonLoader"; // Ensure this path is correct
 
 export const dynamic = "force-dynamic"; // For always fetching fresh data
 
