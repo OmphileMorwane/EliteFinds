@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import SkeletonLoader from "./components/SkeletonLoader"; // Ensure this path is correct
+import ProductsImageCorousel from "./components/ProductsImageCorousel";
+import "./globals.css";
 
 export const dynamic = "force-dynamic"; // For always fetching fresh data
 
@@ -58,11 +60,16 @@ export default function ProductsPage({ searchParams }) {
             key={product.id}
             className="border border-stone-200 bg-stone-200 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300"
           >
-            <img
-              src={product.images[0]}
-              alt={product.title}
-              className="h-40 w-full object-contain"
-            />
+            {product.images.length > 1 ? (
+              <ProductsImageCorousel images={product.images} /> // Show ImageCarousel if there are multiple images
+            ) : (
+              <img
+                src={product.images[0]}
+                alt={product.title}
+                className="h-40 w-full object-contain"
+              />
+            )}
+
             <div className="p-4">
               <h2 className="text-lg font-semibold text-gray-800 truncate">
                 {product.title}
