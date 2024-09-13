@@ -1,15 +1,17 @@
-"use client";
-import { useParams } from "next/navigation";
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
-import { useState, useEffect } from "react";
-import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Import the skeleton 
+import ProductSkeletonLoader from "../components/ProductSkeletonLoader";
 import Link from "next/link";
-import "../globals.css";
+import dynamic from 'next/dynamic';
+
+// Dynamically import ClientSideImage to ensure it runs on the client side
+const ClientSideImage = dynamic(() => import('../components/ClientSideImage'), {
+  ssr: false, // Ensure this component is not server-side rendered
+});
 
 /**
  * Fetches product details from an API based on the product ID.
- * 
+ *
  * @param {string} id - The ID of the product to fetch.
  * @returns {Promise<Object>} - A promise that resolves to the product data.
  * @throws {Error} - Throws an error if the fetch operation fails.
@@ -27,63 +29,37 @@ async function fetchProduct(id) {
     return res.json();
   } catch (error) {
     console.error("Error fetching product:", error.message);
-    throw error; // Re-throw to handle in the component
+    throw error;
   }
 }
 
 /**
  * ProductPage component to display detailed information about a single product.
- * 
+ *
+ * @param {Object} params - The dynamic route params.
  * @returns {JSX.Element} - The rendered component.
  */
-export default function ProductPage() {
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [error, setError] = useState(null); // Add error state
-  const { id } = useParams();
+export default async function ProductPage({ params }) {
+  const { id } = params;
 
-  useEffect(() => {
-    /**
-     * Fetch and set product data based on the product ID.
-     * 
-     * @param {string} id - The ID of the product to fetch.
-     */
-    async function getProductData(id) {
-      try {
-        const productIdData = await fetchProduct(id);
-        setProduct(productIdData);
-      } catch (error) {
-        setError("Failed to load product. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (id) {
-      getProductData(id);
-    } else {
-      setError("Invalid product ID."); // Handle case where id is missing
-      setLoading(false);
-    }
-  }, [id]);
-
-  if (loading) {
-    return <ProductSkeletonLoader />; // Show loading state
-  }
-
-  if (error) {
+  let product;
+  try {
+    product = await fetchProduct(id);
+  } catch (error) {
     return (
       <div>
-        <p className="text-red-500">{error}</p> {/* Show error message */}
-        <Link href="/products">
-          <a className="text-blue-500 underline">Back to Products</a>
+        <p className="text-red-500">
+          Failed to load product. Please try again later.
+        </p>
+        <Link href="/products" className="text-blue-500 underline">
+          Back to Products
         </Link>
       </div>
     );
   }
 
   if (!product) {
-    return <p>Product not found.</p>; // Fallback if product is not found
+    return <p>Product not found.</p>;
   }
 
   return (
@@ -95,29 +71,29 @@ export default function ProductPage() {
           {product.images && product.images.length > 1 ? (
             <ImageCarousel images={product.images} />
           ) : product.images && product.images.length === 1 ? (
-            <img
+            <ClientSideImage
               src={product.images[0]}
               alt={product.title}
-              className="w-full h-96 object-contain rounded-lg shadow-lg bg-stone-200"
-              onError={(e) => {
-                e.target.onerror = null; 
-                e.target.src = "/fallback-image.jpg"; // Fallback image for broken image links
-              }}
+              fallback="/fallback-image.jpg"
             />
           ) : (
             <p>No images available for this product.</p>
           )}
         </div>
         <div className="mt-6 md:mt-0 md:ml-8 flex-1">
-          <p className="text-lg text-gray-700 mb-4">{product.description || "No description available."}</p>
+          <p className="text-lg text-gray-700 mb-4">
+            {product.description || "No description available."}
+          </p>
           <p className="text-xl font-semibold mb-2">
-            Price: <span className="text-green-600">${product.price || "N/A"}</span>
+            Price:{" "}
+            <span className="text-green-600">${product.price || "N/A"}</span>
           </p>
           <p className="text-sm text-gray-500 mb-2">
             Category: {product.category || "Uncategorized"}
           </p>
           <p className="text-sm text-gray-500 mb-2">
-            Tags: {product.tags ? product.tags.join(", ") : "No tags available."}
+            Tags:{" "}
+            {product.tags ? product.tags.join(", ") : "No tags available."}
           </p>
           <p className="text-sm text-gray-500 mb-4">
             Rating: {product.rating || "No rating available."}
@@ -149,7 +125,9 @@ export default function ProductPage() {
                         : "Date unknown"}
                     </span>
                   </p>
-                  <p className="text-sm text-gray-600">{review.comment || "No comment provided."}</p>
+                  <p className="text-sm text-gray-600">
+                    {review.comment || "No comment provided."}
+                  </p>
                   <p className="text-sm font-semibold">
                     Rating: ⭐ {review.rating || "No rating"}
                   </p>
