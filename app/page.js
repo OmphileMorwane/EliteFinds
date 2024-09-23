@@ -9,10 +9,10 @@ export const dynamic = "force-dynamic"; // Always fetching fresh data
  * Fetches a list of products from an API.
  * 
  * @param {number} page - The page number for pagination (default is 1).
+ * @param {string} searchQuery - The search query for filtering products.
  * @returns {Promise<{ products: Array, hasMore: boolean }>} - A promise that resolves to an object containing the products and a flag indicating if there are more products to load.
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
-
 async function fetchProducts(page = 1, searchQuery = "") {
   const skip = (page - 1) * 20;
   const res = await fetch(
@@ -29,11 +29,12 @@ async function fetchProducts(page = 1, searchQuery = "") {
     hasMore: data.length === 20, // If we get 20 products, assume there are more
   };
 }
+
 /**
  * ProductsPage component to display a list of products.
  * 
  * @param {Object} props - Component props.
- * @param {Object} props.searchParams - The search parameters, including the page number for pagination.
+ * @param {Object} props.searchParams - The search parameters, including the page number and search query.
  * @returns {JSX.Element} - The rendered component.
  */
 export default async function ProductsPage({ searchParams }) {
@@ -111,6 +112,7 @@ export default async function ProductsPage({ searchParams }) {
     </div>
   );
 }
+
 /**
  * Pagination component for navigating between pages.
  * 
