@@ -4,7 +4,6 @@ import ImageCarousel from "../components/ImageCarousel";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
 
-
 // Dynamically import ClientSideImage to ensure it runs on the client side
 const ClientSideImage = dynamic(() => import('../components/ClientSideImage'), {
   ssr: false, // Ensure this component is not server-side rendered
@@ -43,8 +42,16 @@ async function fetchProduct(id) {
 export default async function ProductPage({ params }) {
   const { id } = params;
 
+  // Display a loading state while fetching data
+  const loadingMessage = (
+    <div>
+      <p>Loading product details...</p>
+    </div>
+  );
+
   let product;
   try {
+    // Fetch the product data
     product = await fetchProduct(id);
   } catch (error) {
     return (
@@ -63,6 +70,7 @@ export default async function ProductPage({ params }) {
     return <p>Product not found.</p>;
   }
 
+  // Render the loading message before the product is fetched
   return (
     <div className="max-w-5xl mx-auto p-8 py-20">
       <BackButton />
