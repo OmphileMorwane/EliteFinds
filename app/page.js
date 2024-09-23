@@ -1,6 +1,7 @@
 import Link from "next/link"; 
 import SkeletonLoader from "./components/SkeletonLoader";
 import ProductsImageCorousel from "./components/ProductsImageCorousel";
+import SearchBar from "./components/SearchBar";
 import "./globals.css";
 
 export const dynamic = "force-dynamic"; // Always fetching fresh data
@@ -57,19 +58,7 @@ export default async function ProductsPage({ searchParams }) {
     <div className="max-w-6xl mx-auto p-8 bg-stone-100">
       <h1 className="text-3xl font-bold mb-8">Products</h1>
 
-      {/* Search Bar */}
-      <form action="/" method="get" className="mb-4">
-        <input
-          type="text"
-          name="query"
-          defaultValue={searchQuery}
-          placeholder="Search products..."
-          className="border border-stone-300 p-2 mr-2"
-        />
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          Search
-        </button>
-      </form>
+      <SearchBar searchQuery={searchQuery} />
 
       {error ? (
         <p className="text-red-500">{error}</p>
