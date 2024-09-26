@@ -2,8 +2,7 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 /**
  * A carousel component for displaying a series of images.
@@ -30,25 +29,32 @@ const ImageCarousel = ({ images }) => {
   useEffect(() => {
     if (Array.isArray(images)) {
       setProductImages(images);
+      console.log("New Array", images); // Log the incoming images
     }
-    console.log("New Array", productImages);
   }, [images]);
 
-  console.log(productImages);
+  // Log the productImages when it updates
+  useEffect(() => {
+    console.log("Updated product images:", productImages);
+  }, [productImages]);
 
   return (
     <div className="carousel-container">
-      <Slider {...settings}>
-        {productImages.map((image, index) => (
-          <div key={index}>
-            <img
-              src={image}
-              alt={`Product image ${index + 1}`}
-              className="w-full h-96 object-contain"
-            />
-          </div>
-        ))}
-      </Slider>
+      {productImages.length > 0 ? ( // Check if there are images before rendering the slider
+        <Slider {...settings}>
+          {productImages.map((image, index) => (
+            <div key={index}>
+              <img
+                src={image}
+                alt={`Product image ${index + 1}`}
+                className="w-full h-96 object-contain"
+              />
+            </div>
+          ))}
+        </Slider>
+      ) : (
+        <p>No images available</p> // Fallback UI
+      )}
     </div>
   );
 };
