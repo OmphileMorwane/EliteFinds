@@ -1,11 +1,15 @@
-import Link from "next/link"; 
+import Link from "next/link";
 import SkeletonLoader from "./components/SkeletonLoader";
 import ProductsImageCorousel from "./components/ProductsImageCorousel";
 import SearchBar from "./components/SearchBar";
+import Sort from "./components/Sort";
+import Filter from "./components/Filter";
+import Pagination from "./components/pagination";
 import "./globals.css";
 
-export const dynamic = "force-dynamic"; // Always fetching fresh data
+export const dynamic = "force-dynamic";
 
+// Fetch products function
 /**
  * Fetches a list of products from an API.
  * 
@@ -14,10 +18,12 @@ export const dynamic = "force-dynamic"; // Always fetching fresh data
  * @returns {Promise<{ products: Array, hasMore: boolean }>} - A promise that resolves to an object containing the products and a flag indicating if there are more products to load.
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
-async function fetchProducts(page = 1, searchQuery = "") {
+async function fetchProducts(page = 1, searchQuery = "", sortBy = "id", order = "asc", category = "") {
   const skip = (page - 1) * 20;
   const res = await fetch(
-    `https://next-ecommerce-api.vercel.app/products?skip=${skip}&limit=20&search=${encodeURIComponent(searchQuery)}`
+    `https://next-ecommerce-api.vercel.app/products?skip=${skip}&limit=20&search=${encodeURIComponent(
+      searchQuery
+    )}&sortBy=${sortBy}&order=${order}&category=${category}`
   );
 
   if (!res.ok) {
@@ -33,24 +39,46 @@ async function fetchProducts(page = 1, searchQuery = "") {
 
 /**
  * ProductsPage component to display a list of products.
- * 
+ *
  * @param {Object} props - Component props.
  * @param {Object} props.searchParams - The search parameters, including the page number and search query.
  * @returns {JSX.Element} - The rendered component.
  */
 export default async function ProductsPage({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
-  const searchQuery = searchParams.query || ""; // Get search query from params
+  const searchQuery = searchParams.query || "";
+  const selectedSort = searchParams.sort || 'default';
+  const selectedCategory = searchParams.category || "";
+
+  // Initialize default sort parameters
+  let sortBy = 'id';
+  let order = 'asc';
+
+  // Update sortBy and order based on selectedSort
+  if (selectedSort === 'price_asc') {
+    sortBy = 'price';
+    order = 'asc';
+  } else if (selectedSort === 'price_desc') {
+    sortBy = 'price';
+    order = 'desc';
+  }
+
   let products = [];
   let hasMore = false;
   let error = null;
 
   try {
-    const { products: fetchedProducts, hasMore: more } = await fetchProducts(page, searchQuery);
+    const { products: fetchedProducts, hasMore: more } = await fetchProducts(
+      page,
+      searchQuery,
+      sortBy,
+      order,
+      selectedCategory
+    );
     products = fetchedProducts;
     hasMore = more;
   } catch (err) {
-    error = "Failed to load products. Please try again later.";
+    error = 'Failed to load products. Please try again later.';
     console.error(err);
   }
 
@@ -58,7 +86,14 @@ export default async function ProductsPage({ searchParams }) {
     <div className="max-w-6xl mx-auto p-8 bg-stone-100">
       <h1 className="text-3xl font-bold mb-8">Products</h1>
 
+      {/* Search bar */}
       <SearchBar searchQuery={searchQuery} />
+
+      {/* Sort and Filter components */}
+      <div className="flex justify-between mb-4">
+        <Sort selectedSort={selectedSort} />
+        <Filter categories={['Category1', 'Category2']} selectedCategory={selectedCategory} />
+      </div>
 
       {error ? (
         <p className="text-red-500">{error}</p>
@@ -97,41 +132,8 @@ export default async function ProductsPage({ searchParams }) {
           ))}
         </div>
       )}
+
       <Pagination currentPage={page} hasMore={hasMore} />
-    </div>
-  );
-}
-
-/**
- * Pagination component for navigating between pages.
- * 
- * @param {Object} props - Component props.
- * @param {number} props.currentPage - The current page number.
- * @param {boolean} props.hasMore - Flag indicating if there are more pages to load.
- * @returns {JSX.Element} - The rendered component.
- */
-function Pagination({ currentPage, hasMore }) {
-  const pageNum = parseInt(currentPage, 10);
-  const prevPage = pageNum > 1 ? pageNum - 1 : null;
-  const nextPage = pageNum + 1;
-
-  return (
-    <div className="flex justify-between items-center mt-8">
-      {prevPage && (
-        <Link href={`/?page=${prevPage}`}>
-          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
-            Previous Page
-          </button>
-        </Link>
-      )}
-      <div className="text-gray-700">Page {currentPage}</div>
-      {hasMore && (
-        <Link href={`/?page=${nextPage}`}>
-          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
-            Next Page
-          </button>
-        </Link>
-      )}
     </div>
   );
 }
