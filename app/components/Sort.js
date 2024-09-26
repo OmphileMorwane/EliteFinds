@@ -1,15 +1,25 @@
-"use client"
-import { useRouter } from 'next/navigation';
+"use client";
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Sort({ selectedSort }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const path = usePathname();
+
+  useEffect(() => {
+    console.log('Current sort selected:', selectedSort); // Log when the sort changes
+  }, [selectedSort]);
   
+
   const handleSortChange = (event) => {
     const sort = event.target.value;
-    router.push({
-      pathname: '/',
-      query: { ...router.query, sort }
-    });
+
+
+    // // Create a new URL object based on the current URL
+   
+    router.push(`${path}?page=1&sort=${sort}`);
   };
 
   return (
