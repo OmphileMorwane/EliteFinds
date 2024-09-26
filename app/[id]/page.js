@@ -1,12 +1,15 @@
+// ProductPage.js
+
 import "../globals.css";
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import ReviewList from "../components/ReviewList"; // Import the ReviewList component
 
 // Dynamically import ClientSideImage to ensure it runs on the client side
-const ClientSideImage = dynamic(() => import('../components/ClientSideImage'), {
-  ssr: false, // Ensure this component is not server-side rendered
+const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
+  ssr: false, // This line ensures it is only rendered on the client
 });
 
 /**
@@ -21,7 +24,6 @@ async function fetchProduct(id) {
     const res = await fetch(
       `https://next-ecommerce-api.vercel.app/products/${id}`
     );
-
     if (!res.ok) {
       throw new Error("Failed to fetch product");
     }
@@ -41,13 +43,6 @@ async function fetchProduct(id) {
  */
 export default async function ProductPage({ params }) {
   const { id } = params;
-
-  // Display a loading state while fetching data
-  const loadingMessage = (
-    <div>
-      <p>Loading product details...</p>
-    </div>
-  );
 
   let product;
   try {
@@ -70,7 +65,6 @@ export default async function ProductPage({ params }) {
     return <p>Product not found.</p>;
   }
 
-  // Render the loading message before the product is fetched
   return (
     <div className="max-w-5xl mx-auto p-8 py-20">
       <BackButton />
@@ -95,57 +89,36 @@ export default async function ProductPage({ params }) {
           </p>
           <p className="text-xl font-semibold mb-2">
             Price:{" "}
-            <span className="text-green-600">${product.price || "N/A"}</span>
+            <span className="text-green-600">
+              ${product.price.toFixed(2) || "N/A"}
+            </span>
           </p>
           <p className="text-sm text-gray-500 mb-2">
             Category: {product.category || "Uncategorized"}
           </p>
           <p className="text-sm text-gray-500 mb-2">
             Tags:{" "}
-            {product.tags ? product.tags.join(", ") : "No tags available."}
+            {product.tags && product.tags.length > 0
+              ? product.tags.join(", ")
+              : "No tags available."}
           </p>
           <p className="text-sm text-gray-500 mb-4">
-            Rating: {product.rating || "No rating available."}
+            Rating:{" "}
+            {product.rating
+              ? product.rating.toFixed(1)
+              : "No rating available."}
           </p>
           <p
             className={`text-sm font-medium mb-6 ${
               product.stock > 0 ? "text-green-500" : "text-red-500"
             }`}
           >
-            {product.stock > 0 ? "In stock" : "Out of stock"}
+            {product.stock > 0
+              ? `In stock (${product.stock} available)`
+              : "Out of stock"}
           </p>
-          <div className="bg-stone-200 p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold mb-4">Reviews</h3>
-            {product.reviews && product.reviews.length > 0 ? (
-              product.reviews.map((review) => (
-                <div key={review.id} className="mb-4 border-b pb-4">
-                  <p className="font-medium">
-                    {review.reviewerName || "Anonymous"} -{" "}
-                    <span className="text-gray-500">
-                      {review.date
-                        ? new Date(review.date).toLocaleString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            hour: "numeric",
-                            minute: "numeric",
-                            hour12: true,
-                          })
-                        : "Date unknown"}
-                    </span>
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {review.comment || "No comment provided."}
-                  </p>
-                  <p className="text-sm font-semibold">
-                    Rating: ⭐ {review.rating || "No rating"}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-gray-500">No reviews yet.</p>
-            )}
-          </div>
+          {/* Pass the reviews to the ReviewList component */}
+          <ReviewList reviews={product.reviews || []} />
         </div>
       </div>
     </div>
