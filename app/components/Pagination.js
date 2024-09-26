@@ -1,10 +1,10 @@
 "use client";
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 /**
  * Pagination component for navigating between pages.
- * 
+ *
  * @param {Object} props - Component props.
  * @param {number} props.currentPage - The current page number.
  * @param {boolean} props.hasMore - Flag indicating if there are more pages to load.
@@ -17,12 +17,17 @@ function Pagination({ currentPage, hasMore }) {
   const nextPage = pageNum + 1;
 
   // Get the current category from URL parameters
-  const category = searchParams.get('category') || '';
+  const category = searchParams.get("category") || "";
+  const sort = searchParams.get("sort") || "";
 
   return (
     <div className="flex justify-between items-center mt-8">
       {prevPage && (
-        <Link href={`/?page=${prevPage}${category ? `&category=${category}` : ''}`}>
+        <Link
+          href={`/?page=${prevPage}${category ? `&category=${category}` : ""}${
+            sort ? `&sort=${sort}` : ""
+          }`}
+        >
           <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
             Previous Page
           </button>
@@ -30,7 +35,11 @@ function Pagination({ currentPage, hasMore }) {
       )}
       <div className="text-gray-700">Page {currentPage}</div>
       {hasMore && (
-        <Link href={`/?page=${nextPage}${category ? `&category=${category}` : ''}`}>
+        <Link
+          href={`/?page=${nextPage}${category ? `&category=${category}` : ""}${
+            sort ? `&sort=${sort}` : ""
+          }`}
+        >
           <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
             Next Page
           </button>
