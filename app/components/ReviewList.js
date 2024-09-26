@@ -1,48 +1,76 @@
 "use client";
-// ReviewList.js
 import React, { useState, useEffect } from "react";
+import CustomDropdown from "./CustomDropdown"; // Adjust the path as needed
 
-/**
- * ReviewList Component - Renders a list of reviews sorted by date.
- *
- * @param {Object[]} reviews - Array of review objects.
- * @returns {JSX.Element} - The rendered list of reviews.
- */
 const ReviewList = ({ reviews }) => {
-  // State to manage sorting order: true for descending, false for ascending
   const [sortDescending, setSortDescending] = useState(true);
+  const [ratingDescending, setRatingDescending] = useState(true);
+  const [sortType, setSortType] = useState("date");
 
-  // Effect to log the current reviews when they change
   useEffect(() => {
     console.log("Current reviews:", reviews);
   }, [reviews]);
 
-  // Sort the reviews by date based on the sortDescending state
   const sortedReviews = reviews
     ? [...reviews].sort((a, b) => {
-        return sortDescending
-          ? new Date(b.date) - new Date(a.date) // Newest first
-          : new Date(a.date) - new Date(b.date); // Oldest first
+        if (sortType === "date") {
+          return sortDescending
+            ? new Date(b.date) - new Date(a.date)
+            : new Date(a.date) - new Date(b.date);
+        } else if (sortType === "rating") {
+          return ratingDescending ? b.rating - a.rating : a.rating - b.rating;
+        }
+        return 0;
       })
     : [];
 
-  // Toggle sorting order
-  const handleSortToggle = () => {
-    setSortDescending((prev) => !prev);
+  const handleSortTypeChange = (event) => {
+    setSortType(event);
+  };
+
+  const handleSortOrderChange = (event) => {
+    const isDescending = event === "desc";
+    if (sortType === "date") {
+      setSortDescending(isDescending);
+    } else if (sortType === "rating") {
+      setRatingDescending(isDescending);
+    }
   };
 
   return (
     <div className="bg-stone-200 p-4 rounded-lg shadow-md">
       <h3 className="text-lg font-semibold mb-4">Reviews</h3>
-      <button
-        onClick={handleSortToggle}
-        className="mb-4 p-2 bg-blue-500 text-white rounded"
-      >
-        Sort by date: {sortDescending ? "Newest First" : "Oldest First"}
-      </button>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center">
+          <label htmlFor="sortType" className="mr-2 font-medium">
+            Sort by:
+          </label>
+          <CustomDropdown
+            options={[
+              { value: "date", label: "Date" },
+              { value: "rating", label: "Rating" },
+            ]}
+            value={sortType}
+            onChange={handleSortTypeChange}
+          />
+        </div>
+        <div className="flex items-center">
+          <label htmlFor="sortOrder" className="mr-2 font-medium">
+            Order:
+          </label>
+          <CustomDropdown
+            options={[
+              { value: "desc", label: sortType === "date" ? "Newest First" : "Highest First" },
+              { value: "asc", label: sortType === "date" ? "Oldest First" : "Lowest First" },
+            ]}
+            value={sortDescending ? "desc" : "asc"}
+            onChange={handleSortOrderChange}
+          />
+        </div>
+      </div>
       {sortedReviews.length > 0 ? (
         sortedReviews.map((review) => (
-          <div key={review.id} className="mb-4 border-b pb-4">
+          <div key={review.reviewerEmail} className="mb-4 border-b pb-4">
             <p className="font-medium">
               {review.reviewerName || "Anonymous"} -{" "}
               <span className="text-gray-500">
