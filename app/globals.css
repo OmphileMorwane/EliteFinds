@@ -40,9 +40,21 @@ body {
   right: 30px; /* Adjust position if needed */
 }
 
-/* Optional: Adjust arrow size */
 .slick-prev:before, 
 .slick-next:before {
   font-size: 20px; /* Adjust size */
   color: grey; /* Change the arrow color */
 }
+
+@media (max-width: 640px) {
+  .filter {
+    flex-direction: column; /* Column layout for small screens */
+  }
+}
+
+@media (min-width: 640px) {
+  .filter {
+    flex-direction: row; /* Row layout for medium and larger screens */
+  }
+}
+
