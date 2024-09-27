@@ -40,6 +40,7 @@ function Filter() {
     <div className="filter">
       <label htmlFor="category-select" className="font-semibold text-gray-700">Category:</label>
       <CustomDropdown 
+        id="category-select" 
         options={[{ value: '', label: 'All Categories' }, ...categories]} 
         value={selectedCategory} 
         onChange={handleCategoryChange} 
