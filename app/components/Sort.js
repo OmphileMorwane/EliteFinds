@@ -1,7 +1,8 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import CustomDropdown from "./CustomDropdown"; // Adjust the import path as necessary
 
 export default function Sort({ selectedSort }) {
   const router = useRouter();
@@ -9,25 +10,29 @@ export default function Sort({ selectedSort }) {
   const path = usePathname();
 
   useEffect(() => {
-    console.log('Current sort selected:', selectedSort); // Log when the sort changes
+    console.log("Current sort selected:", selectedSort); // Log when the sort changes
   }, [selectedSort]);
-  
 
-  const handleSortChange = (event) => {
-    const sort = event.target.value;
-
-
-    // // Create a new URL object based on the current URL
-   
+  const handleSortChange = (sort) => {
     router.push(`${path}?page=1&sort=${sort}`);
   };
 
+  const sortOptions = [
+    { value: "default", label: "Default" },
+    { value: "price_asc", label: " Low to High" },
+    { value: "price_desc", label: "High to Low" },
+  ];
+
   return (
-    <select value={selectedSort} onChange={handleSortChange}>
-      <option value="default">Default</option>
-      <option value="price_asc">Price: Low to High</option>
-      <option value="price_desc">Price: High to Low</option>
-    </select>
+    <div className="filter">
+      <label htmlFor="sort-select" className="font-semibold text-gray-700 ">
+        Price Sort:
+      </label>
+      <CustomDropdown
+        options={sortOptions}
+        value={selectedSort}
+        onChange={handleSortChange}
+      />
+    </div>
   );
 }
-
