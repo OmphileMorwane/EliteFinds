@@ -1,5 +1,4 @@
-// ProductPage.js
-
+import { notFound } from "next/navigation"; // Next.js function to trigger 404
 import "../globals.css";
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
@@ -11,7 +10,6 @@ import ReviewList from "../components/ReviewList"; // Import the ReviewList comp
 const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
   ssr: false, // This line ensures it is only rendered on the client
 });
-
 /**
  * Fetches product details from an API based on the product ID.
  *
@@ -24,45 +22,58 @@ async function fetchProduct(id) {
     const res = await fetch(
       `https://next-ecommerce-api.vercel.app/products/${id}`
     );
-    if (!res.ok) {
-      throw new Error("Failed to fetch product");
+
+    if (res.status === 404) {
+      notFound();
     }
 
-    return res.json();
+    if (!res.ok) {
+      throw new Error(`Failed to fetch product: ${res.status} ${res.statusText}`);
+    }
+
+    return await res.json();
   } catch (error) {
     console.error("Error fetching product:", error.message);
-    throw error;
+    throw error; // Rethrow the error to be caught in the component
   }
 }
 
-/**
- * ProductPage component to display detailed information about a single product.
- *
- * @param {Object} params - The dynamic route params.
- * @returns {JSX.Element} - The rendered component.
- */
+export async function generateMetadata({ params }) {
+  try {
+    const product = await fetchProduct(params.id);
+    return {
+      title: product.title || "Product",
+      description: product.description || "No description available",
+    };
+  } catch (error) {
+    return {
+      title: "Product Not Found",
+      description: "The requested product could not be found.",
+    };
+  }
+}
+
 export default async function ProductPage({ params }) {
   const { id } = params;
 
   let product;
   try {
-    // Fetch the product data
     product = await fetchProduct(id);
   } catch (error) {
+    // Error handling for different error messages
     return (
-      <div>
-        <p className="text-red-500">
-          Failed to load product. Please try again later.
-        </p>
-        <Link href="/products" className="text-blue-500 underline">
-          Back to Products
-        </Link>
+      <div className="flex flex-col min-h-screen justify-between"> {/* Ensure content is spaced correctly */}
+        <div className="flex-grow" /> {/* This div takes up available space */}
+        <div className="text-center p-8">
+          <p className="text-red-700 text-2xl">
+            There was an issue loading the page. Please try again later.
+          </p>
+          <Link href="/" className="text-green-600 underline mt-4">
+            Back to Products
+          </Link>
+        </div>
       </div>
     );
-  }
-
-  if (!product) {
-    return <p>Product not found.</p>;
   }
 
   return (
@@ -104,9 +115,7 @@ export default async function ProductPage({ params }) {
           </p>
           <p className="text-sm text-gray-500 mb-4">
             Rating:{" "}
-            {product.rating
-              ? product.rating.toFixed(1)
-              : "No rating available."}
+            {product.rating ? product.rating.toFixed(1) : "No rating available."}
           </p>
           <p
             className={`text-sm font-medium mb-6 ${
