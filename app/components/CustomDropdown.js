@@ -15,7 +15,7 @@ const CustomDropdown = ({ options, value, onChange }) => {
     <div className="relative inline-block w-36"> {/* Adjusted width here */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-gray-100 border border-gray-300 rounded-md py-1.5 px-2 w-full text-left text-gray-700 font-medium focus:outline-none shadow-md hover:shadow-lg transition duration-200 ease-in-out flex items-center justify-between"
+        className="bg-gray-100 border hover:bg-gray-300 border-gray-400 rounded-md py-1.5 px-2 w-full text-left text-gray-700 font-medium focus:outline-none shadow-md hover:shadow-lg transition duration-200 ease-in-out flex items-center justify-between"
       >
         <span>{selectedOption ? selectedOption.label : "Select an option"}</span>
         {/* Dropdown arrow */}
