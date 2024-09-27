@@ -40,7 +40,7 @@ body {
   right: 30px; /* Adjust position if needed */
 }
 
-.slick-prev:before, 
+.slick-prev:before,
 .slick-next:before {
   font-size: 20px; /* Adjust size */
   color: grey; /* Change the arrow color */
@@ -58,3 +58,38 @@ body {
   }
 }
 
+/* Custom dropdown container styles */
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%; /* Full width on smaller screens */
+  max-width: 300px; /* Constrain max-width */
+  margin: 0 auto; /* Center the dropdown */
+}
+
+/* Custom dropdown options */
+.custom-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 100%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.custom-dropdown:hover .custom-dropdown-content {
+  display: block;
+}
+
+/* Responsive styling */
+@media (min-width: 768px) {
+  .custom-dropdown {
+    max-width: 400px; /* Slightly increase width on medium screens */
+  }
+}
+
+@media (min-width: 1024px) {
+  .custom-dropdown {
+    max-width: 500px; /* Increase width on larger screens */
+  }
+}
