@@ -7,9 +7,7 @@ const ReviewList = ({ reviews }) => {
   const [ratingDescending, setRatingDescending] = useState(true);
   const [sortType, setSortType] = useState("date");
 
-  useEffect(() => {
-    console.log("Current reviews:", reviews);
-  }, [reviews]);
+  useEffect(() => {}, [reviews]);
 
   const sortedReviews = reviews
     ? [...reviews].sort((a, b) => {
@@ -60,8 +58,14 @@ const ReviewList = ({ reviews }) => {
           </label>
           <CustomDropdown
             options={[
-              { value: "desc", label: sortType === "date" ? "Newest First" : "Highest First" },
-              { value: "asc", label: sortType === "date" ? "Oldest First" : "Lowest First" },
+              {
+                value: "desc",
+                label: sortType === "date" ? "Newest First" : "Highest First",
+              },
+              {
+                value: "asc",
+                label: sortType === "date" ? "Oldest First" : "Lowest First",
+              },
             ]}
             value={sortDescending ? "desc" : "asc"}
             onChange={handleSortOrderChange}
