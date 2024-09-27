@@ -34,7 +34,6 @@ async function fetchProducts(
     )}&sortBy=${sortBy}&order=${order}&category=${category}`,
     {
       cache: "force-cache", // Caching strategy
-      next: { revalidate: 60 }, // Revalidate the data every 60 seconds
     }
   );
 
