@@ -2,13 +2,27 @@
 import React, { useState, useEffect } from "react";
 import CustomDropdown from "./CustomDropdown"; // Adjust the path as needed
 
+/**
+ * ReviewList component displays a list of reviews with options to sort them.
+ *
+ * @param {Object} props - Component props.
+ * @param {Array} props.reviews - Array of review objects containing reviewer information and ratings.
+ * @returns {JSX.Element} Rendered ReviewList component.
+ */
 const ReviewList = ({ reviews }) => {
-  const [sortDescending, setSortDescending] = useState(true);
-  const [ratingDescending, setRatingDescending] = useState(true);
-  const [sortType, setSortType] = useState("date");
+  // State to manage sorting order and type
+  const [sortDescending, setSortDescending] = useState(true); // Determines if the list is sorted in descending order by date
+  const [ratingDescending, setRatingDescending] = useState(true); // Determines if the list is sorted in descending order by rating
+  const [sortType, setSortType] = useState("date"); // Current sorting type (date or rating)
 
+  // Effect to handle changes when reviews change
   useEffect(() => {}, [reviews]);
 
+  /**
+   * Sorts reviews based on selected sort type and order.
+   * 
+   * @returns {Array} Sorted array of reviews.
+   */
   const sortedReviews = reviews
     ? [...reviews].sort((a, b) => {
         if (sortType === "date") {
@@ -22,10 +36,20 @@ const ReviewList = ({ reviews }) => {
       })
     : [];
 
+  /**
+   * Handles change in sort type from dropdown.
+   * 
+   * @param {string} event - Selected sort type.
+   */
   const handleSortTypeChange = (event) => {
     setSortType(event);
   };
 
+  /**
+   * Handles change in sort order from dropdown.
+   * 
+   * @param {string} event - Selected sort order (asc or desc).
+   */
   const handleSortOrderChange = (event) => {
     const isDescending = event === "desc";
     if (sortType === "date") {
