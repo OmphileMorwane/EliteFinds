@@ -11,6 +11,7 @@ import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Impo
 const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
   ssr: false, // This line ensures it is only rendered on the client
 });
+
 /**
  * Fetches product details from an API based on the product ID.
  *
@@ -20,9 +21,9 @@ const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
  */
 async function fetchProduct(id) {
   try {
-    const res = await fetch(
-      `https://next-ecommerce-api.vercel.app/products/${id}`
-    );
+    const res = await fetch(`https://next-ecommerce-api.vercel.app/products/${id}`, {
+      next: { revalidate: 60 }, // Cache for 60 seconds
+    });
 
     if (res.status === 404) {
       notFound();
