@@ -5,6 +5,7 @@ import ImageCarousel from "../components/ImageCarousel";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import ReviewList from "../components/ReviewList"; // Import the ReviewList component
+import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Import the ProductSkeletonLoader
 
 // Dynamically import ClientSideImage to ensure it runs on the client side
 const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
@@ -74,6 +75,11 @@ export default async function ProductPage({ params }) {
         </div>
       </div>
     );
+  }
+
+  if (!product) {
+    // While waiting for the product, show the skeleton loader
+    return <ProductSkeletonLoader />;
   }
 
   return (
