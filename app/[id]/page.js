@@ -21,16 +21,21 @@ const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
  */
 async function fetchProduct(id) {
   try {
-    const res = await fetch(`https://next-ecommerce-api.vercel.app/products/${id}`, {
-      next: { revalidate: 60 }, // Cache for 60 seconds
-    });
+    const res = await fetch(
+      `https://next-ecommerce-api.vercel.app/products/${id}`,
+      {
+        next: { revalidate: 60 }, // Cache for 60 seconds
+      }
+    );
 
     if (res.status === 404) {
       notFound();
     }
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch product: ${res.status} ${res.statusText}`);
+      throw new Error(
+        `Failed to fetch product: ${res.status} ${res.statusText}`
+      );
     }
 
     return await res.json();
@@ -64,7 +69,9 @@ export default async function ProductPage({ params }) {
   } catch (error) {
     // Error handling for different error messages
     return (
-      <div className="flex flex-col min-h-screen justify-between"> {/* Ensure content is spaced correctly */}
+      <div className="flex flex-col min-h-screen justify-between">
+        {" "}
+        {/* Ensure content is spaced correctly */}
         <div className="flex-grow" /> {/* This div takes up available space */}
         <div className="text-center p-8">
           <p className="text-red-700 text-2xl">
@@ -122,7 +129,9 @@ export default async function ProductPage({ params }) {
           </p>
           <p className="text-sm text-gray-500 mb-4">
             Rating:{" "}
-            {product.rating ? product.rating.toFixed(1) : "No rating available."}
+            {product.rating
+              ? product.rating.toFixed(1)
+              : "No rating available."}
           </p>
           <p
             className={`text-sm font-medium mb-6 ${
