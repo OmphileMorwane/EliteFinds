@@ -48,6 +48,8 @@
 ![Screenshot](/public/images/Screenshot2.png)
 
 ![Screenshot](/public/images/Screenshot3.png)
+![Screenshot](/public/images/Screenshot4.png)
+![Screenshot](/public/images/Screenshot5.png)
 
 ### Installation
 
