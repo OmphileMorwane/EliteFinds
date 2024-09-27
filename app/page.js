@@ -8,27 +8,40 @@ import Pagination from "./components/Pagination";
 import ResetButton from "./components/ResetButton";
 import "./globals.css";
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic"; // You can also use "force-static" for static pages
 
 // Fetch products function
 /**
  * Fetches a list of products from an API.
- * 
+ *
  * @param {number} page - The page number for pagination (default is 1).
  * @param {string} searchQuery - The search query for filtering products.
  * @returns {Promise<{ products: Array, hasMore: boolean }>} - A promise that resolves to an object containing the products and a flag indicating if there are more products to load.
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
-async function fetchProducts(page = 1, searchQuery = "", sortBy = "id", order = "asc", category = "") {
+async function fetchProducts(
+  page = 1,
+  searchQuery = "",
+  sortBy = "id",
+  order = "asc",
+  category = ""
+) {
   const skip = (page - 1) * 20;
+
   const res = await fetch(
     `https://next-ecommerce-api.vercel.app/products?skip=${skip}&limit=20&search=${encodeURIComponent(
       searchQuery
-    )}&sortBy=${sortBy}&order=${order}&category=${category}`
+    )}&sortBy=${sortBy}&order=${order}&category=${category}`,
+    {
+      cache: "force-cache", // Caching strategy
+      next: { revalidate: 60 }, // Revalidate the data every 60 seconds
+    }
   );
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);
+    throw new Error(
+      `Failed to fetch products: ${res.status} ${res.statusText}`
+    );
   }
 
   const data = await res.json();
@@ -45,30 +58,27 @@ async function fetchProducts(page = 1, searchQuery = "", sortBy = "id", order = 
  * @param {Object} props.searchParams - The search parameters, including the page number and search query.
  * @returns {JSX.Element} - The rendered component.
  */
+
 export default async function ProductsPage({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
   const searchQuery = searchParams.query || "";
-  const selectedSort = searchParams.sort || 'default';
+  const selectedSort = searchParams.sort || "default";
   const selectedCategory = searchParams.category || "";
 
-  // Initialize default sort parameters
-  let sortBy = 'id';
-  let order = 'asc';
+  let sortBy = "id";
+  let order = "asc";
 
-  // Update sortBy and order based on selectedSort
-  if (selectedSort === 'price_asc') {
-    sortBy = 'price';
-    order = 'asc';
-  } else if (selectedSort === 'price_desc') {
-    sortBy = 'price';
-    order = 'desc';
+  if (selectedSort === "price_asc") {
+    sortBy = "price";
+    order = "asc";
+  } else if (selectedSort === "price_desc") {
+    sortBy = "price";
+    order = "desc";
   }
 
   let products = [];
   let hasMore = false;
   let error = null;
-
-  
 
   try {
     const { products: fetchedProducts, hasMore: more } = await fetchProducts(
@@ -81,23 +91,25 @@ export default async function ProductsPage({ searchParams }) {
     products = fetchedProducts;
     hasMore = more;
   } catch (err) {
-    error = 'Failed to load products. Please try again later.';
+    error = "Failed to load products. Please try again later.";
     console.error(err);
   }
 
   return (
     <div className="max-w-6xl mx-auto p-8 bg-stone-100">
       <h1 className="text-3xl font-bold mb-8">Products</h1>
-
-      
       {/* Search bar */}
       <SearchBar searchQuery={searchQuery} />
 
       {/* Sort, Filter components, and Reset button */}
+
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-4">
           <Sort selectedSort={selectedSort} />
-          <Filter categories={['Category1', 'Category2']} selectedCategory={selectedCategory} />
+          <Filter
+            categories={["Category1", "Category2"]}
+            selectedCategory={selectedCategory}
+          />
         </div>
         {/* Reset button */}
         <ResetButton /> {/* Use the ResetButton component here */}
@@ -127,7 +139,9 @@ export default async function ProductsPage({ searchParams }) {
                 <h2 className="text-lg font-semibold text-gray-800 truncate">
                   {product.title}
                 </h2>
-                <p className="text-green-600 font-bold mt-2">${product.price}</p>
+                <p className="text-green-600 font-bold mt-2">
+                  ${product.price}
+                </p>
                 <p className="text-gray-500 text-sm">{product.category}</p>
                 <Link
                   href={`/${product.id}`}
