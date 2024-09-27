@@ -4,7 +4,8 @@ import ProductsImageCorousel from "./components/ProductsImageCorousel";
 import SearchBar from "./components/SearchBar";
 import Sort from "./components/Sort";
 import Filter from "./components/Filter";
-import Pagination from "./components/pagination";
+import Pagination from "./components/Pagination";
+import ResetButton from "./components/ResetButton";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +68,8 @@ export default async function ProductsPage({ searchParams }) {
   let hasMore = false;
   let error = null;
 
+  
+
   try {
     const { products: fetchedProducts, hasMore: more } = await fetchProducts(
       page,
@@ -86,13 +89,18 @@ export default async function ProductsPage({ searchParams }) {
     <div className="max-w-6xl mx-auto p-8 bg-stone-100">
       <h1 className="text-3xl font-bold mb-8">Products</h1>
 
+      
       {/* Search bar */}
       <SearchBar searchQuery={searchQuery} />
 
-      {/* Sort and Filter components */}
-      <div className="flex justify-between mb-4">
-        <Sort selectedSort={selectedSort} />
-        <Filter categories={['Category1', 'Category2']} selectedCategory={selectedCategory} />
+      {/* Sort, Filter components, and Reset button */}
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-4">
+          <Sort selectedSort={selectedSort} />
+          <Filter categories={['Category1', 'Category2']} selectedCategory={selectedCategory} />
+        </div>
+        {/* Reset button */}
+        <ResetButton /> {/* Use the ResetButton component here */}
       </div>
 
       {error ? (
