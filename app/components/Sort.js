@@ -19,16 +19,17 @@ export default function Sort({ selectedSort }) {
 
   const sortOptions = [
     { value: "default", label: "Default" },
-    { value: "price_asc", label: " Low to High" },
+    { value: "price_asc", label: "Low to High" },
     { value: "price_desc", label: "High to Low" },
   ];
 
   return (
     <div className="filter">
-      <label htmlFor="sort-select" className="font-semibold text-gray-700 ">
+      <label htmlFor="sort-select" className="font-semibold text-gray-700">
         Price Sort:
       </label>
       <CustomDropdown
+        id="sort-select" // Assigning ID for accessibility
         options={sortOptions}
         value={selectedSort}
         onChange={handleSortChange}
