@@ -1,3 +1,6 @@
+// SkeletonLoader.js
+"use client"; // This makes the component a client component
+
 /**
  * A skeleton loader component for displaying placeholders while product data is loading.
  *
