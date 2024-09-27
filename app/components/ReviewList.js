@@ -44,6 +44,7 @@ const ReviewList = ({ reviews }) => {
             Sort by:
           </label>
           <CustomDropdown
+            id="sortType" // Assigning ID for accessibility
             options={[
               { value: "date", label: "Date" },
               { value: "rating", label: "Rating" },
@@ -57,6 +58,7 @@ const ReviewList = ({ reviews }) => {
             Order:
           </label>
           <CustomDropdown
+            id="sortOrder" // Assigning ID for accessibility
             options={[
               {
                 value: "desc",
