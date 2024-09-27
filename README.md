@@ -60,11 +60,10 @@ To set up the project locally, follow these steps:
 
 - ### **Steps**
   - Clone the Repository
-    - **git clone** https://github.com/OmphileMorwane/OMPMOR404_jse2407_Group-b_Omphile-Morwane_FSJ01.git
+    - **git clone** https://github.com/OmphileMorwane/OMPMOR404_jse2407_Group-b_Omphile-Morwane_FSJ02.git
   - Navigate into the Project Directory
   - **Install Dependencies**
     - npm install
   - **Start the Development Server**
     - npm run dev
   - Then click on the given link to Open Your Browser
-  - **Navigate to** https://ompmor-404-jse2407-group-5ce2485x6-omphilemorwanes-projects.vercel.app to view the deployed application.
