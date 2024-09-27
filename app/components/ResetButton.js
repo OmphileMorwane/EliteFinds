@@ -1,5 +1,4 @@
 "use client";
-// components/ResetButton.js
 import React from "react";
 import { useRouter } from "next/navigation";
 
@@ -20,7 +19,7 @@ export default function ResetButton() {
   return (
     <button
       onClick={handleReset}
-      className="px-4 py-2 bg-gray-300 border border-gray-400 text-gray-700 rounded-md shadow-md hover:bg-green-500 hover:text-white transition-colors duration-200 ease-in-out flex items-center justify-center"
+      className="px-4 py-2 bg-gray-300 border border-gray-400 text-gray-700 rounded-md shadow-md hover:bg-green-500 hover:text-white transition-colors duration-200 ease-in-out flex items-center justify-center w-full sm:w-auto"
     >
       Reset to Default
     </button>
