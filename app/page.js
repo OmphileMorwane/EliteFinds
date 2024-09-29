@@ -104,11 +104,12 @@ export default async function ProductsPage({ searchParams }) {
 
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-4">
-          <Sort selectedSort={selectedSort} />
-          <Filter
+        <Filter
             categories={["Category1", "Category2"]}
             selectedCategory={selectedCategory}
           />
+          <Sort selectedSort={selectedSort} />
+         
         </div>
         {/* Reset button */}
         <ResetButton /> {/* Use the ResetButton component here */}
