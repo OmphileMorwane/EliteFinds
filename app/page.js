@@ -1,3 +1,4 @@
+import { fetchProductsFromFirestore } from "./api/firebaseApi";
 import Link from "next/link";
 import SkeletonLoader from "./components/SkeletonLoader";
 import ProductsImageCorousel from "./components/ProductsImageCorousel";
@@ -9,57 +10,6 @@ import ResetButton from "./components/ResetButton";
 import "./globals.css";
 
 export const dynamic = "force-dynamic"; // You can also use "force-static" for static pages
-
-// Fetch products function
-/**
- * Fetches a list of products from an API.
- *
- * @param {number} page - The page number for pagination (default is 1).
- * @param {string} searchQuery - The search query for filtering products.
- * @param {string} sortBy - The criteria for sorting the products.
- * @param {string} order - The order of sorting (ascending or descending).
- * @param {string} category - The selected product category.
- * @returns {Promise<{ products: Array, hasMore: boolean }>} - A promise that resolves to an object containing the products and a flag indicating if there are more products to load.
- * @throws {Error} - Throws an error if the fetch operation fails.
- */
-async function fetchProducts(
-  page = 1,
-  searchQuery = "",
-  sortBy = "id",
-  order = "asc",
-  category = ""
-) {
-  const skip = (page - 1) * 20;
-
-  const res = await fetch(
-    `https://next-ecommerce-api.vercel.app/products?skip=${skip}&limit=20&search=${encodeURIComponent(
-      searchQuery
-    )}&sortBy=${sortBy}&order=${order}&category=${category}`,
-    {
-      cache: "force-cache", // Caching strategy
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error(
-      `Failed to fetch products: ${res.status} ${res.statusText}`
-    );
-  }
-
-  const data = await res.json();
-  return {
-    products: data,
-    hasMore: data.length === 20, // If we get 20 products, assume there are more
-  };
-}
-
-/**
- * ProductsPage component to display a list of products.
- *
- * @param {Object} props - Component props.
- * @param {Object} props.searchParams - The search parameters, including the page number and search query.
- * @returns {JSX.Element} - The rendered component.
- */
 export default async function ProductsPage({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
   const searchQuery = searchParams.query || "";
@@ -69,7 +19,6 @@ export default async function ProductsPage({ searchParams }) {
   let sortBy = "id";
   let order = "asc";
 
-  // Determine sorting method based on user selection
   if (selectedSort === "price_asc") {
     sortBy = "price";
     order = "asc";
@@ -82,9 +31,9 @@ export default async function ProductsPage({ searchParams }) {
   let hasMore = false;
   let error = null;
 
-  // Fetch products and handle errors
   try {
-    const { products: fetchedProducts, hasMore: more } = await fetchProducts(
+    // Use the new Firestore API function instead
+    const { products: fetchedProducts, hasMore: more } = await fetchProductsFromFirestore(
       page,
       searchQuery,
       sortBy,
@@ -107,10 +56,7 @@ export default async function ProductsPage({ searchParams }) {
       {/* Sort, Filter components, and Reset button */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-4">
-          <Filter
-            categories={["Category1", "Category2"]}
-            selectedCategory={selectedCategory}
-          />
+          <Filter />
           <Sort selectedSort={selectedSort} />
         </div>
         {/* Reset button */}
