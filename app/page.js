@@ -16,6 +16,9 @@ export const dynamic = "force-dynamic"; // You can also use "force-static" for s
  *
  * @param {number} page - The page number for pagination (default is 1).
  * @param {string} searchQuery - The search query for filtering products.
+ * @param {string} sortBy - The criteria for sorting the products.
+ * @param {string} order - The order of sorting (ascending or descending).
+ * @param {string} category - The selected product category.
  * @returns {Promise<{ products: Array, hasMore: boolean }>} - A promise that resolves to an object containing the products and a flag indicating if there are more products to load.
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
@@ -57,7 +60,6 @@ async function fetchProducts(
  * @param {Object} props.searchParams - The search parameters, including the page number and search query.
  * @returns {JSX.Element} - The rendered component.
  */
-
 export default async function ProductsPage({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
   const searchQuery = searchParams.query || "";
@@ -67,6 +69,7 @@ export default async function ProductsPage({ searchParams }) {
   let sortBy = "id";
   let order = "asc";
 
+  // Determine sorting method based on user selection
   if (selectedSort === "price_asc") {
     sortBy = "price";
     order = "asc";
@@ -79,6 +82,7 @@ export default async function ProductsPage({ searchParams }) {
   let hasMore = false;
   let error = null;
 
+  // Fetch products and handle errors
   try {
     const { products: fetchedProducts, hasMore: more } = await fetchProducts(
       page,
@@ -101,20 +105,19 @@ export default async function ProductsPage({ searchParams }) {
       <SearchBar searchQuery={searchQuery} />
 
       {/* Sort, Filter components, and Reset button */}
-
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-4">
-        <Filter
+          <Filter
             categories={["Category1", "Category2"]}
             selectedCategory={selectedCategory}
           />
           <Sort selectedSort={selectedSort} />
-         
         </div>
         {/* Reset button */}
-        <ResetButton /> {/* Use the ResetButton component here */}
+        <ResetButton />
       </div>
 
+      {/* Handle errors or loading states */}
       {error ? (
         <p className="text-red-500">{error}</p>
       ) : products.length === 0 ? (
@@ -155,6 +158,7 @@ export default async function ProductsPage({ searchParams }) {
         </div>
       )}
 
+      {/* Pagination controls */}
       <Pagination currentPage={page} hasMore={hasMore} />
     </div>
   );
