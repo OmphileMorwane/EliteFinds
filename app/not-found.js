@@ -8,8 +8,7 @@ export default function Custom404() {
         <p className="text-lg mb-6">
           Oops! The page you're looking for doesn't exist.
         </p>
-        <Link href="/">
-          <a className="text-green-500 underline">Go back to Products</a>
+        <Link href="/" className="text-green-500 underline">Go back to Products
         </Link>
       </div>
     </div>
