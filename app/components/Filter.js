@@ -1,3 +1,4 @@
+// Filter.js
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ function Filter() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get('category') || '';
+  const selectedSort = searchParams.get('sort') || 'default'; // Get the current sort
 
   // Fetch categories from the API
   useEffect(() => {
@@ -32,6 +34,7 @@ function Filter() {
   const handleCategoryChange = (newCategory) => {
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('category', newCategory);
+    // Keep the existing sort parameter
     currentUrl.searchParams.set('page', '1'); // Reset to the first page
     router.push(currentUrl.toString());
   };
@@ -50,4 +53,5 @@ function Filter() {
 }
 
 export default Filter;
+
 
