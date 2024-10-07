@@ -8,13 +8,18 @@ export default function Sort({ selectedSort }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const path = usePathname();
+  const selectedCategory = searchParams.get("category") || ""; // Get the current category
 
   useEffect(() => {
     console.log("Current sort selected:", selectedSort); // Log when the sort changes
   }, [selectedSort]);
 
   const handleSortChange = (sort) => {
-    router.push(`${path}?page=1&sort=${sort}`);
+    // Create a new URL with the current category and updated sort
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set("sort", sort); // Update sort parameter
+    currentUrl.searchParams.set("page", "1"); // Reset to the first page
+    router.push(currentUrl.toString()); // Navigate to the new URL
   };
 
   const sortOptions = [
