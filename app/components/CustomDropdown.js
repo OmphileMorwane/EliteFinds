@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const CustomDropdown = ({ options, value, onChange, id }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleOptionClick = (optionValue) => {
     onChange(optionValue);
@@ -11,17 +12,29 @@ const CustomDropdown = ({ options, value, onChange, id }) => {
 
   const selectedOption = options.find((opt) => opt.value === value);
 
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative inline-block w-36"> {/* Adjusted width here */}
+    <div className="relative inline-block w-36" ref={dropdownRef}> {/* Attach ref here */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="bg-gray-100 border hover:bg-gray-300 border-gray-400 rounded-md py-1.5 px-2 w-full text-left text-gray-700 font-medium focus:outline-none shadow-md hover:shadow-lg transition duration-200 ease-in-out flex items-center justify-between"
-        id={id} // Assign id to the button for accessibility
-        aria-haspopup="true" // Indicates the button opens a dropdown
-        aria-expanded={isOpen} // Indicates if the dropdown is open
+        id={id}
+        aria-haspopup="true"
+        aria-expanded={isOpen}
       >
         <span>{selectedOption ? selectedOption.label : "Select an option"}</span>
-        {/* Dropdown arrow */}
         <span
           className="ml-2 w-3 h-3 border-t-2 border-gray-600 transform transition-transform duration-200 ease-in-out"
           style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
@@ -45,8 +58,3 @@ const CustomDropdown = ({ options, value, onChange, id }) => {
 };
 
 export default CustomDropdown;
-
-
-
-
-
