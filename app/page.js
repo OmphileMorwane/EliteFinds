@@ -1,4 +1,3 @@
-import { fetchProductsFromFirestore } from "./api/firebaseApi";
 import Link from "next/link";
 import SkeletonLoader from "./components/SkeletonLoader";
 import ProductsImageCorousel from "./components/ProductsImageCorousel";
@@ -7,9 +6,18 @@ import Sort from "./components/Sort";
 import Filter from "./components/Filter";
 import Pagination from "./components/Pagination";
 import ResetButton from "./components/ResetButton";
+import { fetchProducts } from "./api/api"; // Import the fetchProducts function
 import "./globals.css";
 
 export const dynamic = "force-dynamic"; // You can also use "force-static" for static pages
+
+/**
+ * ProductsPage component to display a list of products.
+ *
+ * @param {Object} props - Component props.
+ * @param {Object} props.searchParams - The search parameters, including the page number and search query.
+ * @returns {JSX.Element} - The rendered component.
+ */
 export default async function ProductsPage({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
   const searchQuery = searchParams.query || "";
@@ -32,8 +40,7 @@ export default async function ProductsPage({ searchParams }) {
   let error = null;
 
   try {
-    // Use the new Firestore API function instead
-    const { products: fetchedProducts, hasMore: more } = await fetchProductsFromFirestore(
+    const { products: fetchedProducts, hasMore: more } = await fetchProducts(
       page,
       searchQuery,
       sortBy,
@@ -56,14 +63,16 @@ export default async function ProductsPage({ searchParams }) {
       {/* Sort, Filter components, and Reset button */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-4">
-          <Filter />
+          <Filter
+            categories={["Category1", "Category2"]}
+            selectedCategory={selectedCategory}
+          />
           <Sort selectedSort={selectedSort} />
         </div>
         {/* Reset button */}
-        <ResetButton />
+        <ResetButton /> {/* Use the ResetButton component here */}
       </div>
 
-      {/* Handle errors or loading states */}
       {error ? (
         <p className="text-red-500">{error}</p>
       ) : products.length === 0 ? (
@@ -93,7 +102,7 @@ export default async function ProductsPage({ searchParams }) {
                 </p>
                 <p className="text-gray-500 text-sm">{product.category}</p>
                 <Link
-                  href={`/${product.id}`}
+                  href={`/${product.id}`} // Fixed template literal
                   className="inline-block mt-2 px-1 py-1 bg-green-600 text-white rounded hover:bg-green-900"
                 >
                   View Details
@@ -104,7 +113,6 @@ export default async function ProductsPage({ searchParams }) {
         </div>
       )}
 
-      {/* Pagination controls */}
       <Pagination currentPage={page} hasMore={hasMore} />
     </div>
   );
