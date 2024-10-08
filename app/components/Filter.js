@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import CustomDropdown from './CustomDropdown';
-import { fetchCategoriesFromFirestore } from '../api/firebaseApi'; // Adjust the import path as necessary
+import CustomDropdown from './CustomDropdown'; // Adjust the import path as necessary
 
 function Filter() {
   const [categories, setCategories] = useState([]);
@@ -11,12 +10,16 @@ function Filter() {
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get('category') || '';
 
-  // Fetch categories from Firestore
+  // Fetch categories from the API
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const fetchedCategories = await fetchCategoriesFromFirestore();
-        setCategories(fetchedCategories.map(category => ({ value: category, label: category })));
+        const res = await fetch('https://next-ecommerce-api.vercel.app/categories');
+        if (!res.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+        const data = await res.json();
+        setCategories(data.map(category => ({ value: category, label: category }))); // Format options
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
