@@ -1,24 +1,25 @@
-import { fetchProductFromFirestore } from "../api/firebaseApi"; // Import the function from the Firebase API file
-import { notFound } from "next/navigation"; // Import notFound function from next/navigation
+// Import necessary modules
+import { notFound } from "next/navigation"; // Next.js function to trigger 404
 import "../globals.css";
 import BackButton from "../components/BackButton";
 import ImageCarousel from "../components/ImageCarousel";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import ReviewList from "../components/ReviewList";
-import ProductSkeletonLoader from "../components/ProductSkeletonLoader";
+import ReviewList from "../components/ReviewList"; // Import the ReviewList component
+import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Import the ProductSkeletonLoader
+import { fetchProduct } from "../api/productApi"; // Import the fetchProduct function from your API
 
+// Dynamically import ClientSideImage to ensure it runs on the client side
 const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
-  ssr: false,
+  ssr: false, // This line ensures it is only rendered on the client
 });
 
-// Function to generate the metadata for the product page
 export async function generateMetadata({ params }) {
   try {
-    const product = await fetchProductFromFirestore(params.id);
+    const product = await fetchProduct(params.id);
     return {
-      title: product?.title || "Product",
-      description: product?.description || "No description available",
+      title: product.title || "Product",
+      description: product.description || "No description available",
     };
   } catch (error) {
     return {
@@ -28,24 +29,18 @@ export async function generateMetadata({ params }) {
   }
 }
 
-// ProductPage component that fetches and displays a single product
 export default async function ProductPage({ params }) {
   const { id } = params;
+
   let product;
-
   try {
-    // Fetch the product from Firestore using the product ID
-    product = await fetchProductFromFirestore(id);
-
-    // If the product doesn't exist, trigger the 404 page
-    if (!product) {
-      notFound(); // This will navigate to the 404 page
-    }
+    product = await fetchProduct(id);
   } catch (error) {
-    // If there's an issue fetching the product, show an error message
+    // Error handling for different error messages
     return (
       <div className="flex flex-col min-h-screen justify-between">
-        <div className="flex-grow" />
+      
+        <div className="flex-grow" /> {/* This div takes up available space */}
         <div className="text-center p-8">
           <p className="text-red-700 text-2xl">
             There was an issue loading the page. Please try again later.
@@ -58,12 +53,11 @@ export default async function ProductPage({ params }) {
     );
   }
 
-  // Show a loading skeleton if the product hasn't been loaded yet
   if (!product) {
+    // While waiting for the product, show the skeleton loader
     return <ProductSkeletonLoader />;
   }
 
-  // Render the product details page
   return (
     <div className="max-w-5xl mx-auto p-8 py-20">
       <BackButton />
@@ -89,12 +83,34 @@ export default async function ProductPage({ params }) {
           <p className="text-xl font-semibold mb-2">
             Price:{" "}
             <span className="text-green-600">
-              ${product.price ? product.price.toFixed(2) : "N/A"}
+              ${product.price.toFixed(2) || "N/A"}
             </span>
           </p>
           <p className="text-sm text-gray-500 mb-2">
             Category: {product.category || "Uncategorized"}
           </p>
+          <p className="text-sm text-gray-500 mb-2">
+            Tags:{" "}
+            {product.tags && product.tags.length > 0
+              ? product.tags.join(", ")
+              : "No tags available."}
+          </p>
+          <p className="text-sm text-gray-500 mb-4">
+            Rating:{" "}
+            {product.rating
+              ? product.rating.toFixed(1)
+              : "No rating available."}
+          </p>
+          <p
+            className={`text-sm font-medium mb-6 ${
+              product.stock > 0 ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {product.stock > 0
+              ? `In stock (${product.stock} available)`
+              : "Out of stock"}
+          </p>
+          {/* Pass the reviews to the ReviewList component */}
           <ReviewList reviews={product.reviews || []} />
         </div>
       </div>
