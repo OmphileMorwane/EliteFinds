@@ -1,13 +1,26 @@
-// components/SearchBar.js
-import React from 'react';
+"use client";
+import React, { useState } from "react";
 
-export default function SearchBar({ searchQuery }) {
+export default function SearchBar({ products, onSearch }) {
+  const [searchQuery, setSearchQuery] = useState(""); // Local state to manage the query
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Filter products based on the search query
+    const filteredProducts = products.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    // Pass the filtered products back to the parent component
+    onSearch(filteredProducts);
+  };
+
   return (
-    <form action="/" method="get" className="mb-4 flex items-center">
+    <form onSubmit={handleSubmit} className="mb-4 flex items-center">
       <input
         type="text"
-        name="query"
-        defaultValue={searchQuery}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Search products..."
         className="bg-gray-100 border border-gray-400 p-2 rounded-md shadow-md text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 ease-in-out w-full mr-2"
       />

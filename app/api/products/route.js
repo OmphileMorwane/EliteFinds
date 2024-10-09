@@ -1,5 +1,3 @@
-// src/app/api/products/route.js
-
 import { db } from "../../../firebaseConfig";
 import {
   collection,
@@ -8,6 +6,7 @@ import {
   getDocs,
   orderBy,
   limit,
+  startAfter,
 } from "firebase/firestore";
 
 // Fetch products from Firestore with pagination, search, sort, and filter functionalities
@@ -44,25 +43,24 @@ export async function GET(request) {
     productsQuery = query(
       productsQuery,
       ...filter,
-      orderBy(sortBy, order),
-      limit(itemsPerPage)
+      orderBy(sortBy, order)
     );
 
-    // Pagination: Limit the number of documents returned
-
-    console.log("queries", productsQuery);
-    // Fetch products
-    const productsSnapshot = await getDocs(productsQuery);
-    const products = productsSnapshot.docs.map((doc) => ({
+    // Fetch all products to determine the starting point for pagination
+    const allProductsSnapshot = await getDocs(productsQuery);
+    const allProducts = allProductsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    console.log("db data", products);
+
+    // Calculate the starting index for pagination
+    const startIndex = (page - 1) * itemsPerPage;
+    const paginatedProducts = allProducts.slice(startIndex, startIndex + itemsPerPage);
 
     // Determine if there are more products to fetch
-    const hasMore = products.length === itemsPerPage;
+    const hasMore = startIndex + itemsPerPage < allProducts.length;
 
-    return new Response(JSON.stringify({ products, hasMore }), { status: 200 });
+    return new Response(JSON.stringify({ products: paginatedProducts, hasMore }), { status: 200 });
   } catch (error) {
     console.error("Failed to fetch products from Firestore:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch products" }), {

@@ -13,20 +13,23 @@ import { useSearchParams } from "next/navigation";
 function Pagination({ currentPage, hasMore }) {
   const searchParams = useSearchParams();
   const pageNum = parseInt(currentPage, 10);
-  
+
   // Calculate previous and next page numbers
   const prevPage = pageNum > 1 ? pageNum - 1 : null;
   const nextPage = hasMore ? pageNum + 1 : null; // Only show next page if there are more products
 
-  // Get the current category and sort from URL parameters
+  // Get the current category, sort, and query from URL parameters
   const category = searchParams.get("category") || "";
   const sort = searchParams.get("sort") || "";
+  const query = searchParams.get("query") || "";
 
   return (
     <div className="flex justify-between items-center mt-8">
       {prevPage && (
         <Link
-          href={`/?page=${prevPage}${category ? `&category=${category}` : ""}${sort ? `&sort=${sort}` : ""}`}
+          href={`/?page=${prevPage}${query ? `&query=${query}` : ""}${
+            category ? `&category=${category}` : ""
+          }${sort ? `&sort=${sort}` : ""}`}
         >
           <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
             Previous Page
@@ -36,7 +39,9 @@ function Pagination({ currentPage, hasMore }) {
       <div className="text-gray-700">Page {currentPage}</div>
       {nextPage && (
         <Link
-          href={`/?page=${nextPage}${category ? `&category=${category}` : ""}${sort ? `&sort=${sort}` : ""}`}
+          href={`/?page=${nextPage}${query ? `&query=${query}` : ""}${
+            category ? `&category=${category}` : ""
+          }${sort ? `&sort=${sort}` : ""}`}
         >
           <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
             Next Page

@@ -27,14 +27,17 @@ export async function fetchProducts(
   searchQuery = "",
   sortBy = "id",
   order = "asc",
-  category = ""
+  category = "",
+  itemsPerPage = 20 // Number of items per page
 ) {
   try {
+    // Calculate the offset for pagination
+    const offset = (page - 1) * itemsPerPage;
+
+    // Fetch products from your API
     const res = await fetch(
-      `${apiUrl}/api/products?page=${page}&search=${encodeURIComponent(
-        searchQuery
-      )}&sortBy=${sortBy}&order=${order}&category=${category}`, // Use apiUrl as base
-       {cache: "force-cache" }
+      `${apiUrl}/api/products?page=${page}&limit=${itemsPerPage}&offset=${offset}&search=${encodeURIComponent(searchQuery)}&sortBy=${sortBy}&order=${order}&category=${category}`,
+      { cache: 'force-cache' }
     );
 
     if (!res.ok) {
@@ -43,21 +46,21 @@ export async function fetchProducts(
 
     const data = await res.json();
 
-     // Format IDs as three-digit strings
-  const formattedProducts = data.products.map(product => ({
-    ...product,
-    id: String(product.id).padStart(3, '0') // Ensure ID is a three-digit string
-  }));
+    // Format IDs as three-digit strings
+    const formattedProducts = data.products.map(product => ({
+      ...product,
+      id: String(product.id).padStart(3, '0'), // Ensure ID is a three-digit string
+    }));
+
     return {
-      products: data.products,
-      hasMore: data.hasMore,
+      products: formattedProducts,
+      hasMore: data.hasMore, // This should indicate if there are more products
     };
   } catch (error) {
     console.error("Error fetching products:", error.message);
     throw error; // Rethrow to let the caller handle the error
   }
 }
-
 // Fetch categories from Firestore via your Next.js API
 export async function fetchCategories() {
   try {
