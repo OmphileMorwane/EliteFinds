@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-config();
+config(); // Loads environment variables from your .env file
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -15,7 +15,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 export { db };
