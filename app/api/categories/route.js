@@ -1,18 +1,35 @@
 // src/app/api/categories/route.js
 
 import { db } from "../../../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
-// Fetch product categories from Firestore
+// Define the GET handler for this route
 export async function GET() {
   try {
-    const categoriesRef = collection(db, "categories");
-    const categoriesSnapshot = await getDocs(categoriesRef);
+    // Reference to the "allCategories" document in the "categories" collection
+    const docRef = doc(db, "categories", "allCategories");
 
-    const categories = categoriesSnapshot.docs.map(doc => doc.data());
+    // Fetch the document from Firestore
+    const categoriesSnapshot = await getDoc(docRef);
+
+    // Check if the document exists and fetch the data
+    if (!categoriesSnapshot.exists()) {
+      throw new Error("Document does not exist");
+    }
+
+    // Extract categories from the document data
+    const categories = categoriesSnapshot.data().categories;
+
+    // Return a successful JSON response with the categories
     return new Response(JSON.stringify(categories), { status: 200 });
   } catch (error) {
-    console.error("Failed to fetch categories from Firestore:", error);
-    return new Response(JSON.stringify({ error: "Failed to fetch categories" }), { status: 500 });
+    // Return a JSON error response
+    return new Response(
+      JSON.stringify({
+        message: "Error fetching categories",
+        error: error.message,
+      }),
+      { status: 500 }
+    );
   }
 }
