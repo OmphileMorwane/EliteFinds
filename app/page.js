@@ -6,7 +6,7 @@ import Sort from "./components/Sort";
 import Filter from "./components/Filter";
 import Pagination from "./components/Pagination";
 import ResetButton from "./components/ResetButton";
-import { fetchProducts } from "./api/api"; // Import the fetchProducts function
+import { fetchProducts } from "./api/productApi"; // Import the fetchProducts function
 import "./globals.css";
 
 export const dynamic = "force-dynamic"; // You can also use "force-static" for static pages
@@ -22,18 +22,21 @@ export default async function ProductsPage({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
   const searchQuery = searchParams.query || "";
   const selectedSort = searchParams.sort || "default";
+  let sortBy = searchParams.sortby || "id"
+  let order = searchParams.Order || "asc"
   const selectedCategory = searchParams.category || "";
 
-  let sortBy = "id";
-  let order = "asc";
+  // let sortBy = "id";
+  // let order = "asc";
 
-  if (selectedSort === "price_asc") {
+  if (selectedSort === "price-asc") {
     sortBy = "price";
     order = "asc";
-  } else if (selectedSort === "price_desc") {
+  } else if (selectedSort === "price-desc") {
     sortBy = "price";
     order = "desc";
   }
+
 
   let products = [];
   let hasMore = false;
@@ -67,7 +70,7 @@ export default async function ProductsPage({ searchParams }) {
             categories={["Category1", "Category2"]}
             selectedCategory={selectedCategory}
           />
-          <Sort selectedSort={selectedSort} />
+          <Sort selectedSort={selectedSort} selectedOrder={order} selectedSortby={sortBy}/>
         </div>
         {/* Reset button */}
         <ResetButton /> {/* Use the ResetButton component here */}
