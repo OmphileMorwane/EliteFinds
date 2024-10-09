@@ -1,3 +1,4 @@
+// ProductsPage component
 import Link from "next/link";
 import SkeletonLoader from "./components/SkeletonLoader";
 import ProductsImageCorousel from "./components/ProductsImageCorousel";
@@ -11,32 +12,21 @@ import "./globals.css";
 
 export const dynamic = "force-dynamic"; // You can also use "force-static" for static pages
 
-/**
- * ProductsPage component to display a list of products.
- *
- * @param {Object} props - Component props.
- * @param {Object} props.searchParams - The search parameters, including the page number and search query.
- * @returns {JSX.Element} - The rendered component.
- */
 export default async function ProductsPage({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
   const searchQuery = searchParams.query || "";
   const selectedSort = searchParams.sort || "default";
-  let sortBy = searchParams.sortby || "id"
-  let order = searchParams.Order || "asc"
+  const selectedOrder = searchParams.order || "asc"; // Get order
   const selectedCategory = searchParams.category || "";
 
-  // let sortBy = "id";
-  // let order = "asc";
+  let sortBy = "id"; // Default sort field
+  let order = "asc"; // Default order
 
-  if (selectedSort === "price-asc") {
+  // Determine sort parameters based on user selection
+  if (selectedSort === "price") {
     sortBy = "price";
-    order = "asc";
-  } else if (selectedSort === "price-desc") {
-    sortBy = "price";
-    order = "desc";
+    order = selectedOrder; // Use order from query
   }
-
 
   let products = [];
   let hasMore = false;
@@ -47,7 +37,7 @@ export default async function ProductsPage({ searchParams }) {
       page,
       searchQuery,
       sortBy,
-      order,
+      order, // Pass order to the API
       selectedCategory
     );
     products = fetchedProducts;
@@ -60,20 +50,17 @@ export default async function ProductsPage({ searchParams }) {
   return (
     <div className="max-w-6xl mx-auto p-8 bg-stone-100">
       <h1 className="text-3xl font-bold mb-8">Products</h1>
-      {/* Search bar */}
       <SearchBar searchQuery={searchQuery} />
 
-      {/* Sort, Filter components, and Reset button */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-4">
           <Filter
             categories={["Category1", "Category2"]}
             selectedCategory={selectedCategory}
           />
-          <Sort selectedSort={selectedSort} selectedOrder={order} selectedSortby={sortBy}/>
+          <Sort selectedSort={selectedSort} selectedOrder={selectedOrder} />
         </div>
-        {/* Reset button */}
-        <ResetButton /> {/* Use the ResetButton component here */}
+        <ResetButton />
       </div>
 
       {error ? (
@@ -105,7 +92,7 @@ export default async function ProductsPage({ searchParams }) {
                 </p>
                 <p className="text-gray-500 text-sm">{product.category}</p>
                 <Link
-                  href={`/${product.id}`} // Fixed template literal
+                  href={`/${product.id}`}
                   className="inline-block mt-2 px-1 py-1 bg-green-600 text-white rounded hover:bg-green-900"
                 >
                   View Details

@@ -1,15 +1,15 @@
-"use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from 'react'; // Add this line
 
 const CustomDropdown = ({ options, value, onChange, id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleOptionClick = (optionValue) => {
-    onChange(optionValue);
-    setIsOpen(false);
+    onChange(optionValue); // Call the passed onChange function
+    setIsOpen(false); // Close the dropdown
   };
 
+  // Find the currently selected option
   const selectedOption = options.find((opt) => opt.value === value);
 
   const handleClickOutside = (event) => {
@@ -26,7 +26,7 @@ const CustomDropdown = ({ options, value, onChange, id }) => {
   }, []);
 
   return (
-    <div className="relative inline-block w-36" ref={dropdownRef}> {/* Attach ref here */}
+    <div className="relative inline-block w-36" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="bg-gray-100 border hover:bg-gray-300 border-gray-400 rounded-md py-1.5 px-2 w-full text-left text-gray-700 font-medium focus:outline-none shadow-md hover:shadow-lg transition duration-200 ease-in-out flex items-center justify-between"
@@ -34,6 +34,7 @@ const CustomDropdown = ({ options, value, onChange, id }) => {
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
+        {/* Display the selected option or a placeholder */}
         <span>{selectedOption ? selectedOption.label : "Select an option"}</span>
         <span
           className="ml-2 w-3 h-3 border-t-2 border-gray-600 transform transition-transform duration-200 ease-in-out"
@@ -45,7 +46,7 @@ const CustomDropdown = ({ options, value, onChange, id }) => {
           {options.map((option) => (
             <div
               key={option.value}
-              onClick={() => handleOptionClick(option.value)}
+              onClick={() => handleOptionClick(option.value)} // Update selected option
               className="p-2 text-gray-800 hover:bg-green-500 hover:text-white rounded-md cursor-pointer transition duration-150 ease-in-out"
             >
               {option.label}

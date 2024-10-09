@@ -1,23 +1,34 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CustomDropdown from "./CustomDropdown"; // Adjust the import path as necessary
 
 export default function Sort({ selectedSort }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const path = usePathname();
   const selectedCategory = searchParams.get("category") || ""; // Get the current category
+  const [sort, setSort] = useState(selectedSort); // Manage local sort state
 
+  // Sync local state with prop changes
   useEffect(() => {
-    console.log("Current sort selected:", selectedSort); // Log when the sort changes
+    setSort(selectedSort);
   }, [selectedSort]);
 
-  const handleSortChange = (sort) => {
+  // Log when the sort changes
+  useEffect(() => {
+    console.log("Current sort selected:", sort);
+  }, [sort]);
+
+  // Function to handle sort changes
+  const handleSortChange = (newSort) => {
+    setSort(newSort); // Update local state with the new sort value
+
     // Create a new URL with the current category and updated sort
     const currentUrl = new URL(window.location.href);
-    currentUrl.searchParams.set("sort", sort); // Update sort parameter
+    const [sortKey, order] = newSort.split('_'); // Split sort into key and order
+    currentUrl.searchParams.set("sort", sortKey); // Update sort parameter
+    currentUrl.searchParams.set("order", order); // Update order parameter
     currentUrl.searchParams.set("page", "1"); // Reset to the first page
     router.push(currentUrl.toString()); // Navigate to the new URL
   };
@@ -36,7 +47,7 @@ export default function Sort({ selectedSort }) {
       <CustomDropdown
         id="sort-select" // Assigning ID for accessibility
         options={sortOptions}
-        value={selectedSort}
+        value={sort} // Use local state for the dropdown value
         onChange={handleSortChange}
       />
     </div>
