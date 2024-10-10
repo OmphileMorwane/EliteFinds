@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext"; // Import the useAuth hook to 
 import { auth } from "../../firebaseConfig"; // Import the Firebase auth instance
 import SignIn from "../components/SignIn"; // Import your Login component
 import SignUp from "../components/SignUp"; // Import your SignUp component
+import Modal from "./Modal";
 
 const Navbar = () => {
   const { currentUser } = useAuth(); // Get the current user from the AuthContext
@@ -56,7 +57,7 @@ const Navbar = () => {
               </span>
               <button
                 onClick={handleSignOut}
-                className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                className="bg-green-800 text-white px-3 py-1 rounded hover:bg-green-700"
               >
                 Sign Out
               </button>
@@ -70,7 +71,7 @@ const Navbar = () => {
                   setShowSignUp(false);
                 }}
               >
-                Login
+                Sign In
               </span>
               <span
                 className="hover:text-gray-300 cursor-pointer"
@@ -86,35 +87,15 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Render Login Component as a Modal */}
-      {showLogin && (
-        <div className="modal fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="modal-content bg-white p-8 rounded shadow-lg">
-            <SignIn /> {/* Use the correct SignIn component */}
-            <button
-              onClick={() => setShowLogin(false)}
-              className="bg-red-600 text-white px-4 py-2 rounded mt-4 hover:bg-red-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      <Modal show={showLogin} onClose={() => setShowLogin(false)}>
+  <SignIn />
+</Modal>
 
-      {/* Render SignUp Component as a Modal */}
-      {showSignUp && (
-        <div className="modal fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="modal-content bg-white p-8 rounded shadow-lg">
-            <SignUp /> {/* Your SignUp component */}
-            <button
-              onClick={() => setShowSignUp(false)}
-              className="bg-red-600 text-white px-4 py-2 rounded mt-4 hover:bg-red-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+<Modal show={showSignUp} onClose={() => setShowSignUp(false)}>
+  <SignUp />
+</Modal>
+
+
     </nav>
   );
 };
