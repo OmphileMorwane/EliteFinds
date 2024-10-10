@@ -1,8 +1,9 @@
-"use client";
+'use client';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useState, useEffect } from "react";
+import ClientSideImage from "./ClientSideImage"; // Import ClientSideImage component
 
 /**
  * A carousel component to display product images.
@@ -31,20 +32,18 @@ const ProductsImageCarousel = ({ images }) => {
     if (Array.isArray(images)) {
       setProductImages(images);
     }
-    console.log("New Array", productImages);
   }, [images]);
-
-  console.log(productImages);
 
   return (
     <div className="carousel-container">
       <Slider {...settings}>
         {productImages.map((image, index) => (
           <div key={index}>
-            <img
+            {/* Replace <img> with ClientSideImage for better error handling and fallback */}
+            <ClientSideImage
               src={image}
               alt={`Product image ${index + 1}`}
-              className="w-full h-40 object-contain"
+              fallback="/fallback-image.jpg" // Add your desired fallback image path here
             />
           </div>
         ))}

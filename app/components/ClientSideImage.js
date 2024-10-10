@@ -1,10 +1,9 @@
-'use client'; // Ensure this file is treated as a client component
-
+"use client";
 import Image from 'next/legacy/image';
 import { useState } from 'react';
 
 /**
- * ClientSideImage component for displaying images with fallback.
+ * ClientSideImage component for displaying images with fallback and lazy loading.
  *
  * @param {Object} props - Component props.
  * @param {string} props.src - The source URL of the image.
@@ -14,25 +13,38 @@ import { useState } from 'react';
  */
 const ClientSideImage = ({ src, alt, fallback }) => {
   const [imgSrc, setImgSrc] = useState(src);
+  const [hasError, setHasError] = useState(false);
 
   const handleError = () => {
-    setImgSrc(fallback);
+    setHasError(true); // Set error state when image fails to load
+    if (fallback) {
+      setImgSrc(fallback); // Use fallback image if provided
+    }
   };
 
   return (
     <div className="image-container">
-      <Image
-        src={imgSrc}
-        alt={alt}
-        className="custom-image"
-        layout="responsive"
-        width={150} // Adjust the width as needed
-        height={150} // Adjust the height as needed
-        onError={handleError}
-      />
+      {!hasError ? (
+        <Image
+          src={imgSrc}
+          alt={alt}
+          className="custom-image"
+          layout="responsive"
+          width={150}
+          height={150}
+          onError={handleError}
+          loading="lazy" // Lazy load images for better performance
+        />
+      ) : (
+        <div className="error-placeholder flex justify-center items-center h-40 w-full bg-gray-200">
+          {/* Placeholder text displayed when image fails to load */}
+          <p className="text-center text-gray-500">Image not available</p>
+        </div>
+      )}
     </div>
   );
 };
 
 export default ClientSideImage;
+ 
 
