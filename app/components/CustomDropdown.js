@@ -1,9 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react'; // Add this line
 
+/**
+ * CustomDropdown component for selecting options from a dropdown.
+ *
+ * @param {Object} props - The props for the component.
+ * @param {Array} props.options - The options to display in the dropdown, each having a `value` and a `label`.
+ * @param {string} props.value - The currently selected value.
+ * @param {function} props.onChange - Callback function to be called when an option is selected.
+ * @param {string} props.id - The unique identifier for the dropdown button.
+ * @returns {JSX.Element} The rendered CustomDropdown component.
+ */
 const CustomDropdown = ({ options, value, onChange, id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  /**
+   * Handles option click event and updates the selected value.
+   *
+   * @param {string} optionValue - The value of the selected option.
+   */
   const handleOptionClick = (optionValue) => {
     onChange(optionValue); // Call the passed onChange function
     setIsOpen(false); // Close the dropdown
@@ -12,6 +27,11 @@ const CustomDropdown = ({ options, value, onChange, id }) => {
   // Find the currently selected option
   const selectedOption = options.find((opt) => opt.value === value);
 
+  /**
+   * Closes the dropdown if a click occurs outside of it.
+   *
+   * @param {MouseEvent} event - The mouse event.
+   */
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
