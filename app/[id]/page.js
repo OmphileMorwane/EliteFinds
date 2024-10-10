@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import ReviewList from "../components/ReviewList"; // Import the ReviewList component
 import ProductSkeletonLoader from "../components/ProductSkeletonLoader"; // Import the ProductSkeletonLoader
 import { fetchProduct } from "../api/productApi"; // Import the fetchProduct function from your API
+import axios from "axios";
 
 // Dynamically import ClientSideImage to ensure it runs on the client side
 const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
@@ -39,7 +40,6 @@ export default async function ProductPage({ params }) {
     // Error handling for different error messages
     return (
       <div className="flex flex-col min-h-screen justify-between">
-      
         <div className="flex-grow" /> {/* This div takes up available space */}
         <div className="text-center p-8">
           <p className="text-red-700 text-2xl">
@@ -57,6 +57,23 @@ export default async function ProductPage({ params }) {
     // While waiting for the product, show the skeleton loader
     return <ProductSkeletonLoader />;
   }
+
+  const handleAddReview = async (productId, rating, comment) => {
+    try {
+      const response = await axios.post("/api/reviews/addReview", {
+        productId,
+        rating,
+        comment,
+        reviewerEmail: "user@example.com", // Replace with actual user email
+        reviewerName: "User Name", // Replace with actual user name
+      });
+      // Optionally, you might want to fetch updated reviews or manage state to reflect the new review.
+      // This may require additional logic to re-fetch the product details.
+      console.log(response.data.message);
+    } catch (error) {
+      console.error("Error adding review:", error);
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-8 py-20">
