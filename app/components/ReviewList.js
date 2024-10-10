@@ -1,28 +1,19 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import CustomDropdown from "./CustomDropdown"; // Adjust the path as needed
+import ReviewForm from "./ReviewForm"; // Ensure ReviewForm is correctly imported
+import { useAuth } from "../context/AuthContext";
 
-/**
- * ReviewList component displays a list of reviews with options to sort them.
- *
- * @param {Object} props - Component props.
- * @param {Array} props.reviews - Array of review objects containing reviewer information and ratings.
- * @returns {JSX.Element} Rendered ReviewList component.
- */
-const ReviewList = ({ reviews }) => {
-  // State to manage sorting order and type
-  const [sortDescending, setSortDescending] = useState(true); // Determines if the list is sorted in descending order by date
-  const [ratingDescending, setRatingDescending] = useState(true); // Determines if the list is sorted in descending order by rating
-  const [sortType, setSortType] = useState("date"); // Current sorting type (date or rating)
+const ReviewList = ({ reviews, onSignInRedirect }) => {
+  const [sortDescending, setSortDescending] = useState(true);
+  const [ratingDescending, setRatingDescending] = useState(true);
+  const [sortType, setSortType] = useState("date");
+  const [isFormVisible, setIsFormVisible] = useState(false); // State to control form visibility
+  const { currentUser } = useAuth(); // Get the current user from AuthContext
 
-  // Effect to handle changes when reviews change
   useEffect(() => {}, [reviews]);
 
-  /**
-   * Sorts reviews based on selected sort type and order.
-   * 
-   * @returns {Array} Sorted array of reviews.
-   */
+  // Sort the reviews based on the selected criteria
   const sortedReviews = reviews
     ? [...reviews].sort((a, b) => {
         if (sortType === "date") {
@@ -36,26 +27,32 @@ const ReviewList = ({ reviews }) => {
       })
     : [];
 
-  /**
-   * Handles change in sort type from dropdown.
-   * 
-   * @param {string} event - Selected sort type.
-   */
+  // Handle sort type change
   const handleSortTypeChange = (event) => {
     setSortType(event);
   };
 
-  /**
-   * Handles change in sort order from dropdown.
-   * 
-   * @param {string} event - Selected sort order (asc or desc).
-   */
+  // Handle sort order change
   const handleSortOrderChange = (event) => {
     const isDescending = event === "desc";
     if (sortType === "date") {
       setSortDescending(isDescending);
     } else if (sortType === "rating") {
       setRatingDescending(isDescending);
+    }
+  };
+
+  // Toggle the visibility of the review form based on authentication
+  const handleAddReviewClick = () => {
+    if (currentUser) {
+      setIsFormVisible((prev) => !prev); // Toggle form visibility
+    } else {
+      // If the user is not logged in, redirect or show a message
+      if (typeof onSignInRedirect === "function") {
+        onSignInRedirect(); // Redirect to sign-in page
+      } else {
+        alert("Please sign in to add a review."); // Show an alert if no redirect function is provided
+      }
     }
   };
 
@@ -68,7 +65,7 @@ const ReviewList = ({ reviews }) => {
             Sort by:
           </label>
           <CustomDropdown
-            id="sortType" // Assigning ID for accessibility
+            id="sortType"
             options={[
               { value: "date", label: "Date" },
               { value: "rating", label: "Rating" },
@@ -82,7 +79,7 @@ const ReviewList = ({ reviews }) => {
             Order:
           </label>
           <CustomDropdown
-            id="sortOrder" // Assigning ID for accessibility
+            id="sortOrder"
             options={[
               {
                 value: "desc",
@@ -98,6 +95,8 @@ const ReviewList = ({ reviews }) => {
           />
         </div>
       </div>
+
+      {/* Render sorted reviews */}
       {sortedReviews.length > 0 ? (
         sortedReviews.map((review) => (
           <div key={review.reviewerEmail} className="mb-4 border-b pb-4">
@@ -126,8 +125,19 @@ const ReviewList = ({ reviews }) => {
           </div>
         ))
       ) : (
-        <p className="text-sm text-gray-500">No reviews yet.</p>
+        <p>No reviews available.</p>
       )}
+
+      {/* Add a review button */}
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+        onClick={handleAddReviewClick}
+      >
+        {currentUser ? "Add a Review" : "Sign In to Add a Review"}
+      </button>
+
+      {/* Conditionally render the ReviewForm if the form is visible */}
+      {isFormVisible && <ReviewForm onClose={() => setIsFormVisible(false)} />}
     </div>
   );
 };
