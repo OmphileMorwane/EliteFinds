@@ -4,11 +4,11 @@ const Modal = ({ show, onClose, children }) => {
       
         return (
           <div className="modal fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-            <div className="modal-content bg-white p-8 rounded shadow-lg">
+            <div className="modal-content bg-green-600 p-8 rounded shadow-lg">
               {children}
               <button
                 onClick={onClose}
-                className="bg-red-600 text-white px-4 py-2 rounded mt-4 hover:bg-red-700"
+                className="bg-stone-500 text-white px-4 py-2 rounded mt-4 hover:bg-stone-700"
               >
                 Close
               </button>
