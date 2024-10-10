@@ -1,18 +1,24 @@
-"use client";
+// SearchBar.js
+"use client"; // Ensure this is a Client Component
 import React, { useState } from "react";
 
-export default function SearchBar({ products, onSearch }) {
+export default function SearchBar({ products = [], onSearch }) {
   const [searchQuery, setSearchQuery] = useState(""); // Local state to manage the query
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     // Filter products based on the search query
-    const filteredProducts = products.filter((product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredProducts = Array.isArray(products)
+      ? products.filter((product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : []; // Default to empty if not an array
+
     // Pass the filtered products back to the parent component
-    onSearch(filteredProducts);
+    if (typeof onSearch === "function") {
+      onSearch(filteredProducts); // Ensure onSearch is a function
+    }
   };
 
   return (

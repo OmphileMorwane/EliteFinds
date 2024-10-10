@@ -1,8 +1,10 @@
+// RootLayout.js
 import localFont from "next/font/local";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import { AuthProvider } from "./context/AuthContext"; // Import the AuthProvider
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -18,7 +20,6 @@ const geistMono = localFont({
 export const metadata = {
   title: "EliteFinds",
   description: "Your premier source for all things shopping",
-
   icons: {
     icon: "/favicon.ico",
   },
@@ -33,8 +34,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        {children}
+        {/* Wrap with AuthProvider to provide authentication state */}
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
