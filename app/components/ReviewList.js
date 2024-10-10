@@ -3,8 +3,11 @@ import React, { useState, useEffect } from "react";
 import CustomDropdown from "./CustomDropdown"; // Adjust the path as needed
 import ReviewForm from "./ReviewForm"; // Ensure ReviewForm is correctly imported
 import { useAuth } from "../context/AuthContext";
-
+import { db } from "../../firebaseConfig";
+import { collection, getDocs } from "firebase/firestore"
+;
 const ReviewList = ({ reviews, onSignInRedirect }) => {
+  
   const [sortDescending, setSortDescending] = useState(true);
   const [ratingDescending, setRatingDescending] = useState(true);
   const [sortType, setSortType] = useState("date");
