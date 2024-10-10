@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { signIn } from "../firebase/auth"; // Import the signIn function
 
@@ -18,7 +19,7 @@ const SignIn = () => {
 
   return (
     <form onSubmit={handleSignIn}>
-      <h2>Sign In</h2>
+      <h2>Log in</h2>
       <input
         type="email"
         placeholder="Email"
@@ -33,7 +34,7 @@ const SignIn = () => {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      <button type="submit">Sign In</button>
+      <button type="submit">Log in</button>
       {error && <p>{error}</p>}
     </form>
   );

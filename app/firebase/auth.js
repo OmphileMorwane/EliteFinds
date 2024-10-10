@@ -1,3 +1,4 @@
+"use client";
 import { auth } from "../../firebaseConfig"; // Import the initialized auth instance
 import {
   createUserWithEmailAndPassword,
@@ -9,7 +10,11 @@ import {
 // Sign Up Function
 export const signUp = async (email, password) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     return userCredential.user; // Return the created user
   } catch (error) {
     throw new Error(error.message); // Handle error
@@ -19,7 +24,11 @@ export const signUp = async (email, password) => {
 // Sign In Function
 export const signIn = async (email, password) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     return userCredential.user; // Return the signed-in user
   } catch (error) {
     throw new Error(error.message); // Handle error

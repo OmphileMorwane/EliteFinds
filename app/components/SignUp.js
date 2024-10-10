@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { signUp } from "../firebase/auth"; // Import the signUp function
 
