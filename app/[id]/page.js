@@ -15,6 +15,13 @@ const ClientSideImage = dynamic(() => import("../components/ClientSideImage"), {
   ssr: false, // This line ensures it is only rendered on the client
 });
 
+/**
+ * Generates metadata for the product page based on the product ID.
+ *
+ * @param {Object} params - The parameters for the page.
+ * @param {string} params.id - The ID of the product.
+ * @returns {Promise<Object>} The metadata for the product page.
+ */
 export async function generateMetadata({ params }) {
   try {
     const product = await fetchProduct(params.id);
@@ -30,6 +37,13 @@ export async function generateMetadata({ params }) {
   }
 }
 
+/**
+ * ProductPage component that displays product details and reviews.
+ *
+ * @param {Object} params - The parameters for the product page.
+ * @param {string} params.id - The ID of the product to display.
+ * @returns {JSX.Element} The rendered product page component.
+ */
 export default async function ProductPage({ params }) {
   const { id } = params;
 
@@ -58,6 +72,14 @@ export default async function ProductPage({ params }) {
     return <ProductSkeletonLoader />;
   }
 
+  /**
+   * Handles adding a review for the product.
+   *
+   * @param {string} productId - The ID of the product being reviewed.
+   * @param {number} rating - The rating given by the reviewer.
+   * @param {string} comment - The comment left by the reviewer.
+   * @returns {Promise<void>} A promise that resolves when the review has been added.
+   */
   const handleAddReview = async (productId, rating, comment) => {
     try {
       const response = await axios.post("/api/reviews/addReview", {

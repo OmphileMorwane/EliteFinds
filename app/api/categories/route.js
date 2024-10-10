@@ -4,6 +4,11 @@ import { db } from "../../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 
 // Define the GET handler for this route
+/**
+ * Handles GET requests for fetching categories from Firestore.
+ *
+ * @returns {Promise<Response>} A Promise that resolves to a Response object containing the categories or an error message.
+ */
 export async function GET() {
   try {
     // Reference to the "allCategories" document in the "categories" collection
