@@ -1,4 +1,3 @@
-// ProductsPage component
 import Link from "next/link";
 import SkeletonLoader from "./components/SkeletonLoader";
 import ProductsImageCorousel from "./components/ProductsImageCorousel";
@@ -12,6 +11,19 @@ import "./globals.css";
 
 export const dynamic = "force-dynamic"; // You can also use "force-static" for static pages
 
+/**
+ * ProductsPage component renders the products page with sorting, filtering,
+ * pagination, and other product-related features.
+ * 
+ * @param {Object} props - The component props.
+ * @param {Object} props.searchParams - URL search parameters for filtering products.
+ * @param {string} props.searchParams.page - The current page for pagination (optional).
+ * @param {string} props.searchParams.query - The search query entered by the user (optional).
+ * @param {string} props.searchParams.sort - The sort parameter for products (optional).
+ * @param {string} props.searchParams.order - The order of sorting (asc or desc) (optional).
+ * @param {string} props.searchParams.category - The selected product category for filtering (optional).
+ * @returns {JSX.Element} The rendered component.
+ */
 export default async function ProductsPage({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
   const searchQuery = searchParams.query || "";

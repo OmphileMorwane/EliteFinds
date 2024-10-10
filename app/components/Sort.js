@@ -4,6 +4,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CustomDropdown from "./CustomDropdown"; // Adjust the import path as necessary
 
+/**
+ * Sort component allows users to select a sorting option for products.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.selectedSort - The currently selected sort option.
+ * @returns {JSX.Element} The Sort component.
+ */
 export default function Sort({ selectedSort }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,7 +27,11 @@ export default function Sort({ selectedSort }) {
     console.log("Current sort selected:", sort);
   }, [sort]);
 
-  // Function to handle sort changes
+  /**
+   * Handles the change in sorting option.
+   *
+   * @param {string} newSort - The new sort value selected by the user.
+   */
   const handleSortChange = (newSort) => {
     setSort(newSort); // Update local state with the new sort value
 
@@ -33,6 +44,7 @@ export default function Sort({ selectedSort }) {
     router.push(currentUrl.toString()); // Navigate to the new URL
   };
 
+  // Define sorting options
   const sortOptions = [
     { value: "default", label: "Default" },
     { value: "price_asc", label: "Low to High" },

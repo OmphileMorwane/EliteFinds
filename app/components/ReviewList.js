@@ -4,17 +4,24 @@ import CustomDropdown from "./CustomDropdown"; // Adjust the path as needed
 import ReviewForm from "./ReviewForm"; // Ensure ReviewForm is correctly imported
 import { useAuth } from "../context/AuthContext";
 import { db } from "../../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore"
-;
+import { collection, getDocs } from "firebase/firestore";
+
+/**
+ * ReviewList component to display and manage user reviews.
+ *
+ * @param {Object} props - Component props.
+ * @param {Array} props.reviews - Array of review objects to display.
+ * @param {Function} props.onSignInRedirect - Callback function to handle sign-in redirection.
+ * @returns {JSX.Element} The ReviewList component.
+ */
 const ReviewList = ({ reviews, onSignInRedirect }) => {
-  
   const [sortDescending, setSortDescending] = useState(true);
   const [ratingDescending, setRatingDescending] = useState(true);
   const [sortType, setSortType] = useState("date");
   const [isFormVisible, setIsFormVisible] = useState(false); // State to control form visibility
   const { currentUser } = useAuth(); // Get the current user from AuthContext
 
-  useEffect(() => {}, [reviews]);
+  useEffect(() => {}, [reviews]); // Add relevant side-effects if needed
 
   // Sort the reviews based on the selected criteria
   const sortedReviews = reviews

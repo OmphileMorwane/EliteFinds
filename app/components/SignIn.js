@@ -1,18 +1,28 @@
 import { useState } from "react";
 import { signIn } from "../firebase/auth"; // Import the signIn function
 
+/**
+ * SignIn component for user login.
+ *
+ * @returns {JSX.Element} The SignIn form component.
+ */
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState(""); // State for email input
+  const [password, setPassword] = useState(""); // State for password input
+  const [error, setError] = useState(""); // State for error messages
 
+  /**
+   * Handles the sign-in form submission.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} e - The form event.
+   */
   const handleSignIn = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
     try {
-      await signIn(email, password);
+      await signIn(email, password); // Attempt to sign in the user
       // Redirect or show success message here
     } catch (error) {
-      setError(error.message);
+      setError(error.message); // Set error message if sign in fails
     }
   };
 
@@ -44,7 +54,7 @@ const SignIn = () => {
       >
         Log In
       </button>
-      {error && <p className="mt-2 text-red-500">{error}</p>}
+      {error && <p className="mt-2 text-red-500">{error}</p>} {/* Display error message if any */}
     </form>
   );
 };

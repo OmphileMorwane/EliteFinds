@@ -1,19 +1,30 @@
 "use client";
 import { useState } from "react";
-import { signUp } from "../firebase/auth"; // Import the signUp function
+import { signUp } from "../firebase/auth"; 
+ // Import the signUp function
 
+/**
+ * SignUp component for user registration.
+ *
+ * @returns {JSX.Element} The SignUp form component.
+ */
 const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState(""); // State for email input
+  const [password, setPassword] = useState(""); // State for password input
+  const [error, setError] = useState(""); // State for error messages
 
+  /**
+   * Handles the sign-up form submission.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} e - The form event.
+   */
   const handleSignUp = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
     try {
-      await signUp(email, password);
+      await signUp(email, password); // Attempt to sign up the user
       // Redirect or show success message here
     } catch (error) {
-      setError(error.message);
+      setError(error.message); // Set error message if sign up fails
     }
   };
 
@@ -45,7 +56,7 @@ const SignUp = () => {
       >
         Sign Up
       </button>
-      {error && <p className="mt-2 text-red-500">{error}</p>}
+      {error && <p className="mt-2 text-red-500">{error}</p>} {/* Display error message if any */}
     </form>
   );
 };

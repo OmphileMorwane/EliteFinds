@@ -10,7 +10,12 @@ import { useRouter } from "next/navigation";
 export default function ResetButton() {
   const router = useRouter();
 
-  // Handle reset functionality
+  /**
+   * Handles the reset functionality by navigating to the base products path.
+   *
+   * @function handleReset
+   * @returns {void}
+   */
   const handleReset = () => {
     // Reset the route to the base products path without any query parameters
     router.push(`/`);

@@ -2,12 +2,25 @@
 "use client"; // Ensure this is a Client Component
 import React, { useState } from "react";
 
+/**
+ * SearchBar component for filtering products based on user input.
+ *
+ * @param {Object} props - Component props.
+ * @param {Array} props.products - Array of product objects to search through.
+ * @param {Function} props.onSearch - Callback function to handle search results.
+ * @returns {JSX.Element} The SearchBar component.
+ */
 export default function SearchBar({ products = [], onSearch }) {
   const [searchQuery, setSearchQuery] = useState(""); // Local state to manage the query
 
-  // Handle form submission
+  /**
+   * Handles form submission for searching products.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} e - The form event.
+   */
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
+
     // Filter products based on the search query
     const filteredProducts = Array.isArray(products)
       ? products.filter((product) =>

@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 // app/context/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signOut, signInWithEmailAndPassword } from "firebase/auth";
@@ -7,7 +7,16 @@ import { auth } from "../../firebaseConfig"; // Adjust the import based on your 
 // Create the AuthContext
 const AuthContext = createContext();
 
-// Create a provider component
+/**
+ * AuthProvider component that wraps around children components to provide
+ * authentication context, including current user, loading state, error state,
+ * and functions for sign-in and sign-out.
+ *
+ * @component
+ * @param {Object} props - Props passed to the component.
+ * @param {React.ReactNode} props.children - The child components that will consume the auth context.
+ * @returns {JSX.Element} The AuthProvider component.
+ */
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true); // New loading state
@@ -27,7 +36,14 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe(); // Clean up on component unmount
   }, []);
 
-  // Function to handle user sign-in
+  /**
+   * Function to sign in a user with email and password.
+   *
+   * @async
+   * @param {string} email - The user's email.
+   * @param {string} password - The user's password.
+   * @throws Will throw an error if the sign-in fails.
+   */
   const signIn = async (email, password) => {
     setLoading(true);
     setError(null);
@@ -41,7 +57,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Function to handle user sign-out
+  /**
+   * Function to sign out the current user.
+   *
+   * @async
+   * @throws Will throw an error if the sign-out fails.
+   */
   const signOutUser = async () => {
     setLoading(true);
     setError(null);
@@ -64,6 +85,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the AuthContext
+/**
+ * Custom hook to use the AuthContext.
+ *
+ * @returns {Object} The authentication context, including current user, loading state,
+ * error state, and functions for sign-in and sign-out.
+ */
 export const useAuth = () => useContext(AuthContext);
-
