@@ -10,6 +10,9 @@
  * @param {string} props.alt - The alternative text for the image.
  * @returns {JSX.Element} The rendered product image component.
  */
+
+import ClientSideImage from './ClientSideImage';
+
 const ProductImage = ({ src, alt }) => {
   return (
     <ClientSideImage 
