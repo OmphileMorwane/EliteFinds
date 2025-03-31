@@ -84,6 +84,6 @@ To set up the project locally, follow these steps:
    ```bash
     git clone https://github.com/OmphileMorwane/EliteFinds.git
     Terminal: run npm i
-    then, npm run d
+    then, npm run dev
 
 2. Vercel deployment: [EliteFinds](https://elite-finds-e1gu4qhlo-omphilemorwanes-projects.vercel.app/)
