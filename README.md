@@ -82,6 +82,6 @@ To set up the project locally, follow these steps:
 
 1. Clone the Repository
    ```bash
-   git clone https://github.com/OmphileMorwane/FSJ_Portfolio_Piece_OMPMOR404_jse2407_Group-b_Omphile-Morwane_FSJ03.git
+   git clone https://github.com/OmphileMorwane/EliteFinds.git
 
-2. Vercel deployment: https://vercel.live/link/fsj-portfolio-piece-ompmor-git-e3bcda-omphilemorwanes-projects.vercel.app?via=deployment-domains-list&p=1
+2. Vercel deployment: [EliteFinds](https://elite-finds-e1gu4qhlo-omphilemorwanes-projects.vercel.app/)
