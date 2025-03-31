@@ -82,6 +82,6 @@ To set up the project locally, follow these steps:
 
 1. Clone the Repository
    ```bash
-    git clone [EliteFinds](https://github.com/OmphileMorwane/EliteFinds.git)
+    git clone https://github.com/OmphileMorwane/EliteFinds.git
 
 2. Vercel deployment: [EliteFinds](https://elite-finds-e1gu4qhlo-omphilemorwanes-projects.vercel.app/)
